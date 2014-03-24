@@ -1,6 +1,7 @@
 package com.alma.lanternbell.lantern;
 
 import android.hardware.Camera;
+import android.util.Log;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -12,8 +13,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ImpulsLantern implements Runnable
 {
+	private static final String	TAG	= "ImpulsLantern";
+	
 	public void TurnOn()
 	{
+		Log.i( TAG, "TurnOn" );
+
 		m_isOn.set( true );
 		m_lantern.TurnOn();
 		m_executor.schedule( this, m_onTime, TimeUnit.MILLISECONDS );
@@ -22,6 +27,8 @@ public class ImpulsLantern implements Runnable
 	
 	public void TurnOff()
 	{
+		Log.i( TAG, "TurnOff" );
+
 		m_isOn.set( false );
 		m_lantern.TurnOff();
 		m_lantern.ReleaseCamera();
@@ -30,6 +37,8 @@ public class ImpulsLantern implements Runnable
 	
 	public void run()
 	{
+		Log.i( TAG, "run" );
+
 		boolean	isOn	= m_isOn.get();
 		
 		if( true == isOn )
@@ -55,6 +64,8 @@ public class ImpulsLantern implements Runnable
 	
 	public ImpulsLantern( Camera camera_, int onTime_, int offTime_ )
 	{
+		Log.i( TAG, "ImpulsLantern" );
+
 		m_lantern	= new Lantern( camera_ );
 		m_onTime	= onTime_;
 		m_offTime	= offTime_;
