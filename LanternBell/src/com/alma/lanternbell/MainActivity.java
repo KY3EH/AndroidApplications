@@ -2,7 +2,6 @@ package com.alma.lanternbell;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import com.alma.lanternbell.listener.AbstractButtonListener;
 import com.alma.lanternbell.listener.OffButtonListener;
@@ -10,13 +9,9 @@ import com.alma.lanternbell.listener.OnButtonListener;
 
 public class MainActivity extends Activity
 {
-	private static final String	TAG	= "MainActivity";
-		
 	@Override
 	public void onCreate( Bundle savedInstanceState_ )
 	{
-		Log.e( TAG, "onCreate" );
-		
 		super.onCreate( savedInstanceState_ );
 		setContentView( R.layout.main );
 		

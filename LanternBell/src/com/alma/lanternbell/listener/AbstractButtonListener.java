@@ -21,6 +21,6 @@ public abstract class AbstractButtonListener implements View.OnClickListener
 		
 	}
 	
-	private Activity	m_activity;
+	private final Activity	m_activity;
 
 }

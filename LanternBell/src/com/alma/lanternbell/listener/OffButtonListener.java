@@ -2,7 +2,6 @@ package com.alma.lanternbell.listener;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import com.alma.lanternbell.service.BellService;
 
@@ -12,12 +11,8 @@ import com.alma.lanternbell.service.BellService;
  */
 public class OffButtonListener extends AbstractButtonListener implements View.OnClickListener
 {
-	private static final String	TAG	= "OffButtonListener";
-	
 	public void onClick( View view_ )
 	{
-		Log.d( TAG, "onClick" );
-		
 		Activity	activity	= Activity();
 		Intent		intent		= new Intent( activity, BellService.class );
 		
@@ -28,8 +23,6 @@ public class OffButtonListener extends AbstractButtonListener implements View.On
 	public OffButtonListener( Activity activity_ )
 	{
 		super( activity_ );
-		
-		Log.e( TAG, "OffButtonListener" );
 		
 	}
 
