@@ -1,5 +1,6 @@
 package com.alma.lanternbell.lantern;
 
+import android.hardware.Camera;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +24,7 @@ public class ImpulsLantern implements Runnable
 	{
 		m_isOn.set( false );
 		m_lantern.TurnOff();
+		m_lantern.ReleaseCamera();
 		
 	}
 	
@@ -51,9 +53,9 @@ public class ImpulsLantern implements Runnable
 		
 	}
 	
-	public ImpulsLantern( Lantern lantern_, int onTime_, int offTime_ )
+	public ImpulsLantern( Camera camera_, int onTime_, int offTime_ )
 	{
-		m_lantern	= lantern_;
+		m_lantern	= new Lantern( camera_ );
 		m_onTime	= onTime_;
 		m_offTime	= offTime_;
 		

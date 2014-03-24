@@ -42,6 +42,12 @@ public class Lantern
 		
 	}
 	
+	public void ReleaseCamera()
+	{
+		m_camera	= null;
+		
+	}
+	
 	private void ProcessEvent( LanternEvent event_ )
 	{
 		switch( m_state )
@@ -91,9 +97,6 @@ public class Lantern
 			params.setFlashMode( Camera.Parameters.FLASH_MODE_OFF );
 			m_camera.setParameters( params );
 			m_camera.stopPreview();
-			m_camera.release();
-			
-			m_camera	= null;
 		
 		}
 
@@ -101,8 +104,6 @@ public class Lantern
 	
 	private void On()
 	{
-		m_camera	= Camera.open();
-		
 		if( null != m_camera )
 		{
 			Camera.Parameters	params	= m_camera.getParameters();
@@ -117,7 +118,8 @@ public class Lantern
 	
 	public Lantern( Camera camera_ )
 	{
-		m_state	= LanternState.ST_OFF;
+		m_camera	= camera_;
+		m_state		= LanternState.ST_OFF;
 		
 	}
 	
