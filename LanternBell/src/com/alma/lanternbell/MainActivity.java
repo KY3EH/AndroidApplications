@@ -1,12 +1,14 @@
 package com.alma.lanternbell;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
-import com.alma.lanternbell.listener.AbstractButtonListener;
-import com.alma.lanternbell.listener.OffButtonListener;
-import com.alma.lanternbell.listener.OnButtonListener;
+import com.alma.lanternbell.service.BellService;
 
 public class MainActivity extends Activity
 {
@@ -23,11 +25,35 @@ public class MainActivity extends Activity
 		m_onButton	= (Button)findViewById( R.id.ButtonON );
 		m_offButton	= (Button)findViewById( R.id.ButtonOFF );
 		
-		AbstractButtonListener	onListener	= new OnButtonListener( this );
-		AbstractButtonListener	offListener	= new OffButtonListener( this );
+		m_onButton.setOnClickListener( new OnClickListener()
+										{
+											public void onClick( View v )
+											{
+												Log.i( TAG, "onClick" );
+
+												Context	ctx		= getApplicationContext();
+												Intent	intent	= new Intent( ctx, BellService.class );
+
+												startService( intent );
+
+											}
+										} );
 		
-		m_onButton.setOnClickListener( onListener );
-		m_offButton.setOnClickListener( offListener );
+		
+		m_offButton.setOnClickListener( new OnClickListener()
+										{
+											public void onClick( View v )
+											{
+												Log.i( TAG, "onClick" );
+
+												Context	ctx		= getApplicationContext();
+												Intent	intent	= new Intent( ctx, BellService.class );
+
+												stopService( intent );
+
+											}
+										} );
+		
 		
 	}
 	
