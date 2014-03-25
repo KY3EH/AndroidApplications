@@ -51,14 +51,6 @@ public class Lantern
 		
 	}
 	
-	public void ReleaseCamera()
-	{
-		Log.i( TAG, "ReleaseCamera" );
-
-		m_camera	= null;
-		
-	}
-	
 	private void ProcessEvent( LanternEvent event_ )
 	{
 		Log.i( TAG, "ProcessEvent" );
@@ -147,6 +139,6 @@ public class Lantern
 	}
 	
 	private LanternState	m_state;
-	private Camera			m_camera;
+	private final Camera	m_camera;
 
 }
