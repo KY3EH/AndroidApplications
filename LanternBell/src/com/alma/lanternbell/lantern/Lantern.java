@@ -1,6 +1,7 @@
 package com.alma.lanternbell.lantern;
 
 import android.hardware.Camera;
+import android.util.Log;
 
 /**
  * Mar 3, 2014
@@ -8,6 +9,8 @@ import android.hardware.Camera;
  */
 public class Lantern
 {
+	private static final String	TAG	= "Lantern";
+	
 	private static enum LanternEvent
 	{
 		EV_TURN_ON,
@@ -24,18 +27,24 @@ public class Lantern
 	
 	public void TurnOn()
 	{
+		Log.i( TAG, "TurnOn" );
+
 		ProcessEvent( LanternEvent.EV_TURN_ON );
 		
 	}
 	
 	public void TurnOff()
 	{
+		Log.i( TAG, "TurnOff" );
+
 		ProcessEvent( LanternEvent.EV_TURN_OFF );
 		
 	}
 	
 	public boolean IsOn()
 	{
+		Log.i( TAG, "IsOn" );
+
 		boolean result		= (LanternState.ST_ON == m_state);
 		
 		return result;
@@ -44,12 +53,16 @@ public class Lantern
 	
 	public void ReleaseCamera()
 	{
+		Log.i( TAG, "ReleaseCamera" );
+
 		m_camera	= null;
 		
 	}
 	
 	private void ProcessEvent( LanternEvent event_ )
 	{
+		Log.i( TAG, "ProcessEvent" );
+
 		switch( m_state )
 		{
 		case ST_ON:
@@ -66,6 +79,8 @@ public class Lantern
 	
 	private void ProcessStateOn( LanternEvent event_ )
 	{
+		Log.i( TAG, "ProcessStateOn" );
+
 		switch( event_ )
 		{
 		case EV_TURN_OFF:
@@ -78,6 +93,8 @@ public class Lantern
 	
 	private void ProcessStateOff( LanternEvent event_ )
 	{
+		Log.i( TAG, "ProcessStateOff" );
+
 		switch( event_ )
 		{
 		case EV_TURN_ON:
@@ -90,6 +107,8 @@ public class Lantern
 	
 	private void Off()
 	{
+		Log.i( TAG, "Off" );
+
 		if( null != m_camera )
 		{
 			Camera.Parameters	params	= m_camera.getParameters();
@@ -104,6 +123,8 @@ public class Lantern
 	
 	private void On()
 	{
+		Log.i( TAG, "On" );
+
 		if( null != m_camera )
 		{
 			Camera.Parameters	params	= m_camera.getParameters();
@@ -118,6 +139,8 @@ public class Lantern
 	
 	public Lantern( Camera camera_ )
 	{
+		Log.i( TAG, "Lantern" );
+
 		m_camera	= camera_;
 		m_state		= LanternState.ST_OFF;
 		

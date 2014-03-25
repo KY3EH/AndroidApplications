@@ -7,6 +7,7 @@ import android.hardware.Camera;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import com.alma.lanternbell.lantern.ImpulsLantern;
 
 /**
@@ -15,9 +16,13 @@ import com.alma.lanternbell.lantern.ImpulsLantern;
  */
 public class BellService extends Service
 {
+	private static final String	TAG	= "BellService";
+	
 	@Override
 	public void onCreate()
 	{
+		Log.i( TAG, "onCreate" );
+
 		super.onCreate(); //To change body of generated methods, choose Tools | Templates.
 		
 	}
@@ -25,6 +30,8 @@ public class BellService extends Service
 	@Override
 	public int onStartCommand( Intent intent_, int flags_, int startId_ )
 	{
+		Log.i( TAG, "onStartCommand" );
+
 		Context				ctx					= getApplicationContext();
 		TelephonyManager	telephonyManager	= (TelephonyManager) ctx.getSystemService( Context.TELEPHONY_SERVICE );
 		
@@ -37,6 +44,8 @@ public class BellService extends Service
 	@Override
 	public void onDestroy()
 	{
+		Log.i( TAG, "onDestroy" );
+
 		Context				ctx					= getApplicationContext();
 		TelephonyManager	telephonyManager	= (TelephonyManager) ctx.getSystemService( Context.TELEPHONY_SERVICE );
 		
@@ -50,6 +59,8 @@ public class BellService extends Service
 	@Override
 	public IBinder onBind( Intent intent )
 	{
+		Log.i( TAG, "onBind" );
+
 		return null;	// This service does not support binding
 		
 	}
@@ -59,6 +70,8 @@ public class BellService extends Service
 		@Override
 		public void onCallStateChanged( int state_, String incomingNumber_ )
 		{
+			Log.i( TAG, "onCallStateChanged" );
+
 			switch( state_ )
 			{
 			case TelephonyManager.CALL_STATE_RINGING:
@@ -76,6 +89,8 @@ public class BellService extends Service
 		
 		private void StartLanternBell()
 		{
+			Log.i( TAG, "StartLanternBell" );
+
 			m_camera	= Camera.open();
 			m_lantern	= new ImpulsLantern( m_camera, 50, 1000 );
 			
@@ -86,6 +101,8 @@ public class BellService extends Service
 		
 		private void StopLanternBell()
 		{
+			Log.i( TAG, "StopLanternBell" );
+
 			if( null != m_lantern )
 			{
 				m_lantern.TurnOff();
@@ -93,6 +110,7 @@ public class BellService extends Service
 				
 				m_camera	= null;
 				m_lantern	= null;
+				
 			}
 
 		}
