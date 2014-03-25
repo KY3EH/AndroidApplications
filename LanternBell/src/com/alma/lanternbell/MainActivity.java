@@ -36,11 +36,11 @@ public class MainActivity extends Activity
 		
 		m_serviceButton.setOnClickListener( new OnClickListener()
 											{
-												public void onClick( View v )
+												public void onClick( View view_ )
 												{
 													Log.i( TAG, "onClick" );
 
-													ProcessOnClick();
+													ProcessOnClick( view_ );
 
 												}
 												
@@ -50,6 +50,8 @@ public class MainActivity extends Activity
 	
 	private boolean isServiceRunning( Class class_ )
 	{
+		Log.i( TAG, "isServiceRunning" );
+		
 		boolean										result			= false;
 		String										className		= class_.getName();
 		ActivityManager								manager			= (ActivityManager) getSystemService( Context.ACTIVITY_SERVICE );
@@ -73,8 +75,10 @@ public class MainActivity extends Activity
 		
 	}	
 	
-	private synchronized void ProcessOnClick()
+	private synchronized void ProcessOnClick( View view_ )
 	{
+		Log.i( TAG, "ProcessOnClick" );
+		
 		Context			ctx			= getApplicationContext();
 		Intent			intent		= new Intent( ctx, BellService.class );
 		
