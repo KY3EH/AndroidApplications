@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.alma.lanternbell.service.BellService;
+import com.alma.lanternbell.service.PersistentBoolean;
+import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends Activity
@@ -25,27 +27,50 @@ public class MainActivity extends Activity
 		Log.i( TAG, "onCreate" );
 		
 		super.onCreate( savedInstanceState_ );
-		setContentView( R.layout.main );
 		
-		m_isRunning		= isServiceRunning( BellService.class );
-		m_serviceButton	= (Button)findViewById( R.id.ButtonSERVICE );
-		
-		String	caption	= true == m_isRunning ? CAPTION_OFF : CAPTION_ON;
-		
-		m_serviceButton.setText( caption );
-		
-		m_serviceButton.setOnClickListener( new OnClickListener()
-											{
-												public void onClick( View view_ )
+		try
+		{
+			setContentView( R.layout.main );
+
+			m_serviceButton	= (Button)findViewById( R.id.ButtonSERVICE );
+			m_isRunning		= PersistentBoolean.CreateInstance( this, BellService.VALUE_NAME );
+
+			boolean	isRunning	= isServiceRunning( BellService.class );
+			String	caption		= true == isRunning ? CAPTION_OFF : CAPTION_ON;
+			
+			m_isRunning.Value( isRunning );
+
+			m_serviceButton.setText( caption );
+
+			m_serviceButton.setOnClickListener( new OnClickListener()
 												{
-													Log.i( TAG, "onClick" );
+													public void onClick( View view_ )
+													{
+														Log.i( TAG, "onClick" );
+														
+														try
+														{
+															ProcessOnClick( view_ );
+															
+														}
+														catch( IOException ex_ )
+														{
+															Log.e( TAG, "onClick", ex_ );
+															
+														}
 
-													ProcessOnClick( view_ );
+													}
 
-												}
-												
-											} );		
+												} );		
 
+			
+		}
+		catch( Exception ex_ )
+		{
+			Log.e( TAG, "onCreate", ex_ );
+			
+		}
+		
 	}
 	
 	private boolean isServiceRunning( Class class_ )
@@ -75,17 +100,18 @@ public class MainActivity extends Activity
 		
 	}	
 	
-	private synchronized void ProcessOnClick( View view_ )
+	private synchronized void ProcessOnClick( View view_ ) throws IOException
 	{
 		Log.i( TAG, "ProcessOnClick" );
 		
-		Context			ctx			= getApplicationContext();
-		Intent			intent		= new Intent( ctx, BellService.class );
+		Context	ctx			= getApplicationContext();
+		Intent	intent		= new Intent( ctx, BellService.class );
+		boolean	isRunning	= m_isRunning.Value();
 		
-		if( true == m_isRunning )
+		if( true == isRunning )
 		{
 			stopService( intent );
-			m_isRunning	= false;
+			m_isRunning.Value( false );
 			m_serviceButton.setText( CAPTION_ON );
 			
 		}
@@ -95,7 +121,7 @@ public class MainActivity extends Activity
 			
 			if( null != starResult )
 			{
-				m_isRunning	= true;
+				m_isRunning.Value( true );
 				m_serviceButton.setText( CAPTION_OFF );
 				
 			}
@@ -104,7 +130,7 @@ public class MainActivity extends Activity
 
 	}
 	
-	private Button	m_serviceButton;
-	private boolean	m_isRunning;
+	private Button				m_serviceButton;
+	private PersistentBoolean	m_isRunning;
 	
 }

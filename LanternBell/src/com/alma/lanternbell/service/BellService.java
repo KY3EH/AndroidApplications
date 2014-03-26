@@ -16,7 +16,8 @@ import com.alma.lanternbell.lantern.ImpulsLantern;
  */
 public class BellService extends Service
 {
-	private static final String	TAG	= "BellService";
+	public static final String	VALUE_NAME	= "isRunning";
+	private static final String	TAG			= "BellService";
 	
 	@Override
 	public void onCreate()
