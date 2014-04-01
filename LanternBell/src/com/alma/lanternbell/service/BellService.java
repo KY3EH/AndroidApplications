@@ -27,6 +27,8 @@ public class BellService extends Service
 	
 	public static ComponentName StartService( Context context_ )
 	{
+		Log.i( TAG, "StartService" );
+		
 		Intent			intent	= new Intent( context_, BellService.class );
 		ComponentName	result	= context_.startService( intent );
 		
@@ -42,6 +44,8 @@ public class BellService extends Service
 	
 	public static void StopService( Context context_ )
 	{
+		Log.i( TAG, "StopService" );
+		
 		Intent	intent	= new Intent( context_, BellService.class );
 		boolean	result	= context_.stopService( intent );
 		
@@ -104,24 +108,31 @@ public class BellService extends Service
 	
 	private static void AddNotification( Context context_ )
 	{
+		Log.i( TAG, "AddNotification" );
+		
 		Intent			intent			= new Intent( context_, MainActivity.class );
 		PendingIntent	pendingIntent	= PendingIntent.getActivity( context_ , 0, intent, 0 );
 		Notification	notification	= new Notification.Builder( context_ )
-													.setContentTitle("Latern bell is On")
-													.setContentText("Latern bell")
+//													.setContentTitle("Latern bell is On")
+//													.setContentText("Latern bell")
 													.setSmallIcon( R.drawable.ic_hang )
 													.setContentIntent( pendingIntent ).build();
 		
-		NotificationManager	notificationManager = (NotificationManager) context_.getSystemService( NOTIFICATION_SERVICE );
+		NotificationManager	notificationManager = (NotificationManager) context_.getSystemService( Context.NOTIFICATION_SERVICE );
 		// hide the notification after its selected
 		//notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-		notificationManager.notify( 0, notification );
+		notificationManager.notify( TAG, 0, notification );
 
 	}
 	
 	private static void RemoveNotification( Context context_ )
 	{
+		Log.i( TAG, "RemoveNotification" );
+		
+		NotificationManager	notificationManager = (NotificationManager) context_.getSystemService( Context.NOTIFICATION_SERVICE );
+
+		notificationManager.cancel( TAG, 0 );
 
 	}
 	
