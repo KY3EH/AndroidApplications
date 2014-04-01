@@ -7,6 +7,10 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
@@ -113,8 +117,11 @@ public class BellService extends Service
 		Intent					intent				= new Intent( context_, MainActivity.class );
 		PendingIntent			pendingIntent		= PendingIntent.getActivity( context_ , 0, intent, 0 );
 		Notification.Builder	notificationBuilder	= new Notification.Builder( context_ );
-
+		Resources				resources			= context_.getResources();
+		Bitmap					largeIcon			= BitmapFactory.decodeResource( resources, R.drawable.ic_launcher );
+	
 		notificationBuilder.setSmallIcon( R.drawable.ic_hang );
+		notificationBuilder.setLargeIcon( largeIcon );
 		notificationBuilder.setContentIntent( pendingIntent );
 		notificationBuilder.setAutoCancel( false );
 		notificationBuilder.setOngoing( true );
