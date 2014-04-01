@@ -110,17 +110,17 @@ public class BellService extends Service
 	{
 		Log.i( TAG, "AddNotification" );
 		
-		Intent			intent			= new Intent( context_, MainActivity.class );
-		PendingIntent	pendingIntent	= PendingIntent.getActivity( context_ , 0, intent, 0 );
-		Notification	notification	= new Notification.Builder( context_ )
-//													.setContentTitle("Latern bell is On")
-//													.setContentText("Latern bell")
-													.setSmallIcon( R.drawable.ic_hang )
-													.setContentIntent( pendingIntent ).build();
+		Intent					intent				= new Intent( context_, MainActivity.class );
+		PendingIntent			pendingIntent		= PendingIntent.getActivity( context_ , 0, intent, 0 );
+		Notification.Builder	notificationBuilder	= new Notification.Builder( context_ );
+
+		notificationBuilder.setSmallIcon( R.drawable.ic_hang );
+		notificationBuilder.setContentIntent( pendingIntent );
+		notificationBuilder.setAutoCancel( false );
+		notificationBuilder.setOngoing( true );
 		
+		Notification		notification		= notificationBuilder.build();
 		NotificationManager	notificationManager = (NotificationManager) context_.getSystemService( Context.NOTIFICATION_SERVICE );
-		// hide the notification after its selected
-		//notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		notificationManager.notify( TAG, 0, notification );
 
