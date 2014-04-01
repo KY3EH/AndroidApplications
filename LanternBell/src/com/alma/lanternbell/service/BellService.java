@@ -118,7 +118,7 @@ public class BellService extends Service
 		notificationBuilder.setContentIntent( pendingIntent );
 		notificationBuilder.setAutoCancel( false );
 		notificationBuilder.setOngoing( true );
-		notificationBuilder.setContentText( "Tap to start manager" );
+		notificationBuilder.setContentText( "Tap to start service manager" );
 		notificationBuilder.setContentTitle( "Lantern bell is On" );
 		notificationBuilder.setShowWhen( false );
 		
