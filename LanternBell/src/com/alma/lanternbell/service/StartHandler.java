@@ -27,8 +27,7 @@ public class StartHandler extends BroadcastReceiver
 			
 			if( true == isRunningValue )
 			{
-				Intent			intent		= new Intent( context_, BellService.class );
-				ComponentName	starResult	= context_.startService( intent );
+				ComponentName	starResult	= BellService.StartService( context_ );
 			
 				if( null == starResult )
 				{

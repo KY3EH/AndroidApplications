@@ -105,19 +105,18 @@ public class MainActivity extends Activity
 		Log.i( TAG, "ProcessOnClick" );
 		
 		Context	ctx			= getApplicationContext();
-		Intent	intent		= new Intent( ctx, BellService.class );
 		boolean	isRunning	= m_isRunning.Value();
 		
 		if( true == isRunning )
 		{
-			stopService( intent );
+			BellService.StopService( ctx );
 			m_isRunning.Value( false );
 			m_serviceButton.setText( CAPTION_ON );
 			
 		}
 		else
 		{
-			ComponentName	starResult	= startService( intent );
+			ComponentName	starResult	= BellService.StartService( ctx );
 			
 			if( null != starResult )
 			{
