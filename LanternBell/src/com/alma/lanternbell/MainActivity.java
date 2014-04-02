@@ -29,7 +29,7 @@ public class MainActivity extends Activity implements OnClickListener
 		{
 			setContentView( R.layout.main );
 
-			m_serviceSwitch	= (Switch)findViewById( R.id.switch1 );
+			m_serviceSwitch	= (Switch)findViewById( R.id.switchService );
 			m_isRunning		= PersistentBoolean.CreateInstance( this, BellService.VALUE_NAME );
 
 			boolean	isRunning	= isServiceRunning( BellService.class );

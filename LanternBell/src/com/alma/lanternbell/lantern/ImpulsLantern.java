@@ -22,8 +22,7 @@ public class ImpulsLantern implements Runnable
 		m_lantern	= new Lantern( camera_ );
 		
 		m_isOn.set( true );
-		m_lantern.TurnOn();
-		m_executor.schedule( this, m_onTime, TimeUnit.MILLISECONDS );
+		m_executor.schedule( this, 0, TimeUnit.MILLISECONDS );
 		
 	}
 	
