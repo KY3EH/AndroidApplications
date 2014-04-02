@@ -4,22 +4,19 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.Switch;
 import com.alma.lanternbell.service.BellService;
 import com.alma.lanternbell.service.PersistentBoolean;
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends Activity
+public class MainActivity extends Activity implements OnClickListener
 {
-	private static final String	TAG			= "MainActivity";
-	private static final String	CAPTION_ON	= "On";
-	private static final String	CAPTION_OFF	= "Off";
+	private static final String	TAG	= "MainActivity";
 	
 	@Override
 	public void onCreate( Bundle savedInstanceState_ )
@@ -32,45 +29,39 @@ public class MainActivity extends Activity
 		{
 			setContentView( R.layout.main );
 
-			m_serviceButton	= (Button)findViewById( R.id.ButtonSERVICE );
+			m_serviceSwitch	= (Switch)findViewById( R.id.switch1 );
 			m_isRunning		= PersistentBoolean.CreateInstance( this, BellService.VALUE_NAME );
 
 			boolean	isRunning	= isServiceRunning( BellService.class );
-			String	caption		= true == isRunning ? CAPTION_OFF : CAPTION_ON;
 			
+			m_serviceSwitch.setChecked( isRunning );
 			m_isRunning.Value( isRunning );
+			m_serviceSwitch.setOnClickListener( this );
 
-			m_serviceButton.setText( caption );
-
-			m_serviceButton.setOnClickListener( new OnClickListener()
-												{
-													public void onClick( View view_ )
-													{
-														Log.i( TAG, "onClick" );
-														
-														try
-														{
-															ProcessOnClick( view_ );
-															
-														}
-														catch( IOException ex_ )
-														{
-															Log.e( TAG, "onClick", ex_ );
-															
-														}
-
-													}
-
-												} );		
-
-			
 		}
-		catch( Exception ex_ )
+		catch( IOException ex_ )
 		{
 			Log.e( TAG, "onCreate", ex_ );
 			
 		}
 		
+	}
+	
+	public void onClick( View view_ )
+	{
+		Log.i( TAG, "onClick" );
+
+		try
+		{
+			ProcessOnClick( view_ );
+
+		}
+		catch( IOException ex_ )
+		{
+			Log.e( TAG, "onClick", ex_ );
+
+		}
+
 	}
 	
 	private boolean isServiceRunning( Class class_ )
@@ -111,7 +102,7 @@ public class MainActivity extends Activity
 		{
 			BellService.StopService( ctx );
 			m_isRunning.Value( false );
-			m_serviceButton.setText( CAPTION_ON );
+			m_serviceSwitch.setChecked( false );
 			
 		}
 		else
@@ -121,15 +112,15 @@ public class MainActivity extends Activity
 			if( null != starResult )
 			{
 				m_isRunning.Value( true );
-				m_serviceButton.setText( CAPTION_OFF );
+				m_serviceSwitch.setChecked( true );
 				
 			}
 			
 		}
 
 	}
-	
-	private Button				m_serviceButton;
+
+	private Switch				m_serviceSwitch;
 	private PersistentBoolean	m_isRunning;
 	
 }
