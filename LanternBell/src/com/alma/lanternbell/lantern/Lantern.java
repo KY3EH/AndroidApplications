@@ -41,7 +41,7 @@ public class Lantern
 		
 	}
 	
-	public boolean IsOn()
+	public synchronized boolean IsOn()
 	{
 		Log.i( TAG, "IsOn" );
 
@@ -51,7 +51,7 @@ public class Lantern
 		
 	}
 	
-	private void ProcessEvent( LanternEvent event_ )
+	private synchronized void ProcessEvent( LanternEvent event_ )
 	{
 		Log.i( TAG, "ProcessEvent" );
 
