@@ -183,7 +183,7 @@ public class BellService extends Service
 
 		}
 		
-		private final ImpulsLantern	m_lantern	= new ImpulsLantern( 50, 1500 );
+		private final ImpulsLantern	m_lantern	= new ImpulsLantern( 10, 1000 );
 		
 	}
 	
