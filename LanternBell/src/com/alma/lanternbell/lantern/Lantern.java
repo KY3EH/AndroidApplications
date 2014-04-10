@@ -41,7 +41,7 @@ public class Lantern
 		
 	}
 	
-	public synchronized boolean IsOn()
+	public boolean IsOn()
 	{
 		Log.i( TAG, "IsOn" );
 
@@ -51,7 +51,7 @@ public class Lantern
 		
 	}
 	
-	private synchronized void ProcessEvent( LanternEvent event_ )
+	private void ProcessEvent( LanternEvent event_ )
 	{
 		Log.i( TAG, "ProcessEvent" );
 
@@ -77,7 +77,6 @@ public class Lantern
 		{
 		case EV_TURN_OFF:
 			Off();
-			m_state	= LanternState.ST_OFF;
 			break;
 			
 		}
@@ -91,7 +90,6 @@ public class Lantern
 		{
 		case EV_TURN_ON:
 			On();
-			m_state	= LanternState.ST_ON;
 			break;
 			
 		}
@@ -108,6 +106,10 @@ public class Lantern
 			params.setFlashMode( Camera.Parameters.FLASH_MODE_OFF );
 			m_camera.setParameters( params );
 			m_camera.stopPreview();
+			m_camera.release();
+			
+			m_camera	= null;
+			m_state		= LanternState.ST_OFF;
 		
 		}
 
@@ -116,6 +118,8 @@ public class Lantern
 	private void On()
 	{
 		Log.i( TAG, "On" );
+		
+		m_camera	= Camera.open();
 
 		if( null != m_camera )
 		{
@@ -125,20 +129,21 @@ public class Lantern
 			m_camera.setParameters( params );
 			m_camera.startPreview();
 			
+			m_state	= LanternState.ST_ON;
+			
 		}
 
 	}
 	
-	public Lantern( Camera camera_ )
+	public Lantern()
 	{
 		Log.i( TAG, "Lantern" );
 
-		m_camera	= camera_;
 		m_state		= LanternState.ST_OFF;
 		
 	}
 	
 	private LanternState	m_state;
-	private final Camera	m_camera;
+	private Camera			m_camera;
 
 }

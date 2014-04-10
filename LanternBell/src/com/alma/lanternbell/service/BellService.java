@@ -170,11 +170,8 @@ public class BellService extends Service
 		private void StartLanternBell()
 		{
 			Log.i( TAG, "StartLanternBell" );
-
-			m_camera	= Camera.open();
 			
-			m_lantern.TurnOn( m_camera );
-			
+			m_lantern.TurnOn();
 
 		}
 		
@@ -182,19 +179,11 @@ public class BellService extends Service
 		{
 			Log.i( TAG, "StopLanternBell" );
 
-			if( null != m_camera )
-			{
-				m_lantern.TurnOff();
-				m_camera.release();
-				
-				m_camera	= null;
-				
-			}
+			m_lantern.TurnOff();
 
 		}
 		
-		private Camera				m_camera;
-		private final ImpulsLantern	m_lantern	= new ImpulsLantern( 10, 1000 );
+		private final ImpulsLantern	m_lantern	= new ImpulsLantern( 50, 1500 );
 		
 	}
 	

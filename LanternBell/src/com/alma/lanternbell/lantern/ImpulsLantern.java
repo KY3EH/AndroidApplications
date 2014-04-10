@@ -15,14 +15,12 @@ public class ImpulsLantern implements Runnable
 {
 	private static final String	TAG	= "ImpulsLantern";
 	
-	public void TurnOn( Camera camera_ )
+	public void TurnOn()
 	{
 		Log.i( TAG, "TurnOn" );
 
-		m_lantern	= new Lantern( camera_ );
-		
 		m_isOn.set( true );
-		m_executor.schedule( this, 0, TimeUnit.MILLISECONDS );
+		m_executor.schedule( this, 50, TimeUnit.MILLISECONDS );
 		
 	}
 	
@@ -32,8 +30,6 @@ public class ImpulsLantern implements Runnable
 
 		m_isOn.set( false );
 		m_lantern.TurnOff();
-		
-		m_lantern	= null;
 		
 	}
 	
@@ -68,13 +64,12 @@ public class ImpulsLantern implements Runnable
 	{
 		Log.i( TAG, "ImpulsLantern" );
 
-		m_lantern	= null;
 		m_onTime	= onTime_;
 		m_offTime	= offTime_;
 		
 	}
 	
-	private Lantern							m_lantern;
+	private final Lantern					m_lantern	= new Lantern();
 	private final int						m_onTime;
 	private final int						m_offTime;
 	private final ScheduledExecutorService	m_executor	= Executors.newSingleThreadScheduledExecutor();
