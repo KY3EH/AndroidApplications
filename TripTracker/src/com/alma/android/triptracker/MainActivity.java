@@ -94,6 +94,7 @@ public class MainActivity extends Activity implements ListenerItf
 	@Override
 	protected void onResume()
 	{
+		super.onResume();
 		TrackerService	service		= TrackerService.GetInctance();
 		boolean			isRunning	= (null != service);
 
@@ -110,6 +111,7 @@ public class MainActivity extends Activity implements ListenerItf
 	@Override
 	protected void onPause()
 	{
+		super.onPause();
 		TrackerService	service		= TrackerService.GetInctance();
 
 		if( null != service )
