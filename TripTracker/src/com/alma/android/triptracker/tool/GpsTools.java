@@ -6,8 +6,16 @@ package com.alma.android.triptracker.tool;
  */
 public abstract class GpsTools
 {
-	private static final double	EARTH_RADIUS	= 6367.0d;
+	private static final double	EARTH_RADIUS	= 6367.0d * 1000d;	// Earth radius in meters
 
+	/**
+	 *
+	 * @param oldLatitude_
+	 * @param oldLongitude_
+	 * @param newLatitude_
+	 * @param newLongitude_
+	 * @return Distance since start in meters
+	 */
 	public static double GetDistance(	double oldLatitude_,
 										double oldLongitude_,
 										double newLatitude_,
