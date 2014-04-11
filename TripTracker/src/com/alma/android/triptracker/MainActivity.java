@@ -8,11 +8,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TimeFormatException;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.alma.android.triptracker.tool.GpsTools;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends Activity implements LocationListener, View.OnClickListener
 {
@@ -21,6 +25,8 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 	private static final String VELOCITY_FORMAT		= "#0.00";
 	private static final String ALTITUDE_FORMAT		= "#0.0";
 	private static final String DISTANCE_FORMAT		= "#0.0000";
+	private static final String DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
+	private static final double NANOS_TO_HOURS		= 1000.0d * 1000.0d * 1000.0d * 60.0d * 60.0d;
 	
     /** Called when the activity is first created. */
     @Override
@@ -37,6 +43,8 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 		m_txtVelocity		= (TextView)findViewById( R.id.velocity );
 		m_txtDeltaDistance	= (TextView)findViewById( R.id.deltaDistance );
 		m_txtDistance		= (TextView)findViewById( R.id.distance );
+		m_txtAverageVelocity= (TextView)findViewById( R.id.averageVelocity );
+		m_txtCurantTime		= (TextView)findViewById( R.id.curretTime );
 		m_btReset			= (Button)findViewById( R.id.reset );
 		m_gpsService		= (LocationManager)getSystemService( LOCATION_SERVICE );
 
@@ -59,8 +67,10 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 			m_txtLatitude.setText( "Not available" );
 			m_txtAltitude.setText( "Not available" );
 			m_txtVelocity.setText( "Not available" );
-			m_txtDistance.setText( "Not available" );
 			m_txtDeltaDistance.setText( "Not available" );
+			m_txtDistance.setText( "Not available" );
+			m_txtAverageVelocity.setText( "Not available" );
+			m_txtCurantTime.setText( "Not available" );
 			
 		}
 		else
@@ -99,14 +109,27 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 	public void onLocationChanged( Location location_ )
 	{
 		Log.i( TAG, "onLocationChanged::entry" );
+		
+		long	elapsedTime	= location_.getElapsedRealtimeNanos();
+		
+		if( null == m_startTime )
+		{
+			m_startTime	= new Long( elapsedTime );
+			
+		}
+		
 		DecimalFormat	coordinateFormat	= new DecimalFormat( COORDINATE_FORMAT );
 		DecimalFormat	velocityFormat		= new DecimalFormat( VELOCITY_FORMAT );
 		DecimalFormat	altitudeFormat		= new DecimalFormat( ALTITUDE_FORMAT );
 		DecimalFormat	distanceFormat		= new DecimalFormat( DISTANCE_FORMAT );
+		DateFormat		dateFormat			= new SimpleDateFormat( DATE_FORMAT );
 		double			longitude			= location_.getLongitude();
 		double			latitude			= location_.getLatitude();
 		double			altitude			= location_.getAltitude();
 		float			velocity			= location_.getSpeed();
+		long			currentTime			= location_.getTime();
+		Date			time				= new Date( currentTime  );
+		String			timeValue			= dateFormat.format( time );
 		String			lonValue			= coordinateFormat.format( longitude );
 		String			latValue			= coordinateFormat.format( latitude );
 		String			altitudeValue		= altitudeFormat.format( altitude );
@@ -120,13 +143,21 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 			
 		}
 		
-		UpdateDistence();
+		String	distanceValue	= distanceFormat.format( m_distance );
+	
+		m_txtDistance.setText( distanceValue );
+		
+		double	deltaTime			= (elapsedTime - m_startTime) / NANOS_TO_HOURS;
+		double	averageVelocity		= m_distance / deltaTime;
+		String	averageVelocityValue= velocityFormat.format( averageVelocity );
 		
 		m_txtLongitude.setText( lonValue );
 		m_txtLatitude.setText( latValue );
 		m_txtAltitude.setText( altitudeValue );
 		m_txtVelocity.setText( velocityValue );
 		m_txtDeltaDistance.setText( deltaDistanceValue );
+		m_txtAverageVelocity.setText( averageVelocityValue );
+		m_txtCurantTime.setText( timeValue );
 		
 		m_longitude	= longitude;
 		m_latitude	= latitude;
@@ -137,15 +168,6 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 
 	}
 	
-	private void UpdateDistence()
-	{
-		DecimalFormat	distanceFormat		= new DecimalFormat( DISTANCE_FORMAT );
-		String			distanceValue		= distanceFormat.format( m_distance );
-	
-		m_txtDistance.setText( distanceValue );
-		
-	}
-
 	public void onStatusChanged( String provider, int status, Bundle extras )
 	{
 		Log.i( TAG, "onStatusChanged::entry" );
@@ -175,7 +197,16 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 		Log.i( TAG, "onProviderDisabled::Reset" );
 		
 		m_distance	= 0.0d;
-		UpdateDistence();
+		m_startTime	= null;
+		
+		m_txtLongitude.setText( "Not available" );
+		m_txtLatitude.setText( "Not available" );
+		m_txtAltitude.setText( "Not available" );
+		m_txtVelocity.setText( "Not available" );
+		m_txtDeltaDistance.setText( "Not available" );
+		m_txtDistance.setText( "Not available" );
+		m_txtAverageVelocity.setText( "Not available" );
+		m_txtCurantTime.setText( "Not available" );
 		
 		Log.i( TAG, "onProviderDisabled::Reset" );
 
@@ -194,11 +225,14 @@ public class MainActivity extends Activity implements LocationListener, View.OnC
 	private TextView		m_txtVelocity;
 	private TextView		m_txtDistance;
 	private TextView		m_txtDeltaDistance;
+	private TextView		m_txtCurantTime;
+	private TextView		m_txtAverageVelocity;
 	private Button			m_btReset;
 	private Double			m_longitude			= Double.NaN;
 	private Double			m_latitude			= Double.NaN;
 	private Double			m_altitude			= Double.NaN;
 	private Float			m_velocity;
 	private double			m_distance			= 0.0;
+	private Long			m_startTime			= null;
 	
 }
