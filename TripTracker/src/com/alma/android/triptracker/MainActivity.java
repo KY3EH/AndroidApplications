@@ -13,6 +13,9 @@ import com.alma.android.triptracker.itf.ListenerItf;
 import com.alma.android.triptracker.itf.NotifyPropertiesItf;
 import com.alma.android.triptracker.service.TrackerService;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends Activity implements ListenerItf
@@ -64,6 +67,7 @@ public class MainActivity extends Activity implements ListenerItf
 		m_txtDistance		= (TextView)findViewById( R.id.distance );
 		m_txtAverageVelocity= (TextView)findViewById( R.id.averageVelocity );
 		m_txtCurrentTime	= (TextView)findViewById( R.id.curretTime );
+		m_txtStartTime		= (TextView)findViewById( R.id.startTime );
 		m_btReset			= (Button)findViewById( R.id.reset );
 
 		m_btReset.setOnClickListener( new View.OnClickListener()
@@ -78,6 +82,14 @@ public class MainActivity extends Activity implements ListenerItf
 			
 									);
 
+		ResetText();
+		
+		Log.i( TAG, "onCreate::exit" );
+		
+	}
+	
+	private void ResetText()
+	{
 		m_txtLongitude.setText( "Not available" );
 		m_txtLatitude.setText( "Not available" );
 		m_txtAltitude.setText( "Not available" );
@@ -86,8 +98,7 @@ public class MainActivity extends Activity implements ListenerItf
 		m_txtDistance.setText( "Not available" );
 		m_txtAverageVelocity.setText( "Not available" );
 		m_txtCurrentTime.setText( "Not available" );
-			
-		Log.i( TAG, "onCreate::exit" );
+		m_txtStartTime.setText( "Not available" );
 		
 	}
 	
@@ -101,6 +112,10 @@ public class MainActivity extends Activity implements ListenerItf
 		if( null != service )
 		{
 			service.AddListener( this );
+			
+			NotifyPropertiesItf	data	= service.GetLastProperties();
+			
+			ProcessData( data );
 			
 		}
 		
@@ -128,14 +143,7 @@ public class MainActivity extends Activity implements ListenerItf
 	{
 		Log.i( TAG, "onProviderDisabled::Reset" );
 		
-		m_txtLongitude.setText( "Not available" );
-		m_txtLatitude.setText( "Not available" );
-		m_txtAltitude.setText( "Not available" );
-		m_txtVelocity.setText( "Not available" );
-		m_txtDeltaDistance.setText( "Not available" );
-		m_txtDistance.setText( "Not available" );
-		m_txtAverageVelocity.setText( "Not available" );
-		m_txtCurrentTime.setText( "Not available" );
+		ResetText();
 		
 		TrackerService	service	= TrackerService.GetInctance();
 		
@@ -149,21 +157,78 @@ public class MainActivity extends Activity implements ListenerItf
 
 	}
 	
-	public void Notify( NotifyPropertiesItf data_ )
+	private void ProcessData( NotifyPropertiesItf data_ )
 	{
 		if( null != data_ )
 		{
-			Date	startTime		= data_.StartTime();
-			Date	eventTime		= data_.EventTime();
-			Double	longitude		= data_.Longitude();
-			Double	latitude		= data_.Latitude();
-			Double	altitude		= data_.Altitude();
-			Double	distance		= data_.Distance();
-			Double	deltaDistance	= data_.DeltaDistance();
-			Double	instantVelocity	= data_.InstantVelocity();
-			Double	averageVelocity	= data_.AverageVelocity();
+			Date	startTime				= data_.StartTime();
+			String	startTimeValue			= FormatDate( DATE_FORMAT, startTime );
+			Date	eventTime				= data_.EventTime();
+			String	eventTimeValue			= FormatDate( DATE_FORMAT, eventTime );;
+			Double	longitude				= data_.Longitude();
+			String	longitudeValue			= FormatDouble( COORDINATE_FORMAT, longitude );
+			Double	latitude				= data_.Latitude();
+			String	latitudeValue			= FormatDouble( COORDINATE_FORMAT, latitude );
+			Double	altitude				= data_.Altitude();
+			String	altitudeValue			= FormatDouble( ALTITUDE_FORMAT, altitude );
+			Double	distance				= data_.Distance();
+			String	distanceValue			= FormatDouble( DISTANCE_FORMAT, distance );
+			Double	deltaDistance			= data_.DeltaDistance();
+			String	deltaDistanceValue		= FormatDouble( DISTANCE_FORMAT, deltaDistance );
+			Double	instantVelocity			= data_.InstantVelocity();
+			String	instantVelocityValue	= FormatDouble( VELOCITY_FORMAT, instantVelocity );
+			Double	averageVelocity			= data_.AverageVelocity();
+			String	averageVelocityValue	= FormatDouble( VELOCITY_FORMAT, averageVelocity );
+			
+			m_txtLongitude.setText( longitudeValue );
+			m_txtLatitude.setText( latitudeValue );
+			m_txtAltitude.setText( altitudeValue );
+			m_txtVelocity.setText( instantVelocityValue );
+			m_txtDeltaDistance.setText( deltaDistanceValue );
+			m_txtDistance.setText( distanceValue );
+			m_txtAverageVelocity.setText( averageVelocityValue );
+			m_txtCurrentTime.setText( eventTimeValue );
+			m_txtStartTime.setText( startTimeValue );
 			
 		}
+		
+	}
+	
+	public void Notify( NotifyPropertiesItf data_ )
+	{
+		ProcessData( data_ );
+		
+	}
+	
+	private String FormatDouble( String pattern_, Double value_ )
+	{
+		String			result	= null;
+		
+		if( null != value_ )
+		{
+			DecimalFormat	format	= new DecimalFormat( pattern_ );
+			
+			result	= format.format( value_ );
+			
+		}
+		
+		return result;
+		
+	}
+
+	private String FormatDate( String pattern_, Date value_ )
+	{
+		String			result	= null;
+		
+		if( null != value_ )
+		{
+			SimpleDateFormat	format	= new SimpleDateFormat( pattern_ );
+			
+			result	= format.format( value_ );
+			
+		}
+		
+		return result;
 		
 	}
 
@@ -179,6 +244,7 @@ public class MainActivity extends Activity implements ListenerItf
 		{
 			TrackerService.StopService( ctx );
 			m_serviceSwitch.setChecked( false );
+			ResetText();
 			
 		}
 		else
@@ -188,6 +254,14 @@ public class MainActivity extends Activity implements ListenerItf
 			if( null != starResult )
 			{
 				m_serviceSwitch.setChecked( true );
+				
+				Log.i( TAG, "Service started" );
+			}
+			else
+			{
+				m_serviceSwitch.setChecked( false );
+				
+				Log.e( TAG, "Failed to start service" );
 				
 			}
 			
@@ -203,6 +277,7 @@ public class MainActivity extends Activity implements ListenerItf
 	private TextView			m_txtDistance;
 	private TextView			m_txtDeltaDistance;
 	private TextView			m_txtCurrentTime;
+	private TextView			m_txtStartTime;
 	private TextView			m_txtAverageVelocity;
 	private Button				m_btReset;
 	

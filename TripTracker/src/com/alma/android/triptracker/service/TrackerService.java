@@ -97,9 +97,14 @@ public class TrackerService extends Service implements LocationListener, Tracker
 		
 		if( true == isEnabled )
 		{
-			gpsService.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 1.0f, this );
+			gpsService.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, this );
 			
 			s_instance	= this;
+			
+			Intent	intent	= new Intent( this, MainActivity.class );
+			
+			intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+			startActivity( intent );			
 			
 		}
 		else
@@ -300,14 +305,16 @@ public class TrackerService extends Service implements LocationListener, Tracker
 		Notification.Builder	notificationBuilder	= new Notification.Builder( context_ );
 		Resources				resources			= context_.getResources();
 		Bitmap					largeIcon			= BitmapFactory.decodeResource( resources, R.drawable.ic_launcher );
+		String					applicationName		= context_.getResources().getString( R.string.app_name );
+		String					contentText			= context_.getResources().getString( R.string.content_text );
 	
-//		notificationBuilder.setSmallIcon( R.drawable.ic_hang );
+		notificationBuilder.setSmallIcon( R.drawable.ic_arrow );
 		notificationBuilder.setLargeIcon( largeIcon );
 		notificationBuilder.setContentIntent( pendingIntent );
 		notificationBuilder.setAutoCancel( false );
 		notificationBuilder.setOngoing( true );
-		notificationBuilder.setContentText( "Tap to start service manager" );
-		notificationBuilder.setContentTitle( "Lantern bell is On" );
+		notificationBuilder.setContentText( contentText );
+		notificationBuilder.setContentTitle( applicationName );
 		notificationBuilder.setShowWhen( false );
 		
 		Notification		notification		= notificationBuilder.build();
