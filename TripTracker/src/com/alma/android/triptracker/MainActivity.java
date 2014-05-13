@@ -26,7 +26,8 @@ public class MainActivity extends Activity implements ListenerItf
 	private static final String ALTITUDE_FORMAT		= "#0.0";
 	private static final String DISTANCE_FORMAT		= "#0.0000";
 	private static final String DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
-	private static final double NANOS_TO_HOURS		= 1000.0d * 1000.0d * 1000.0d * 60.0d * 60.0d;
+	private static final double KILO				= 1000.0d;
+	private static final double MPS_TO_KPH			= ( 60 * 60 ) / KILO;
 	
     /** Called when the activity is first created. */
     @Override
@@ -159,6 +160,8 @@ public class MainActivity extends Activity implements ListenerItf
 	
 	private void ProcessData( NotifyPropertiesItf data_ )
 	{
+		Log.i( TAG, "ProcessData::entry" );
+		
 		if( null != data_ )
 		{
 			Date	startTime				= data_.StartTime();
@@ -171,13 +174,13 @@ public class MainActivity extends Activity implements ListenerItf
 			String	latitudeValue			= FormatDouble( COORDINATE_FORMAT, latitude );
 			Double	altitude				= data_.Altitude();
 			String	altitudeValue			= FormatDouble( ALTITUDE_FORMAT, altitude );
-			Double	distance				= data_.Distance();
+			Double	distance				= data_.Distance() / KILO;							// km
 			String	distanceValue			= FormatDouble( DISTANCE_FORMAT, distance );
-			Double	deltaDistance			= data_.DeltaDistance();
+			Double	deltaDistance			= data_.DeltaDistance() / KILO;						// km
 			String	deltaDistanceValue		= FormatDouble( DISTANCE_FORMAT, deltaDistance );
-			Double	instantVelocity			= data_.InstantVelocity();
+			Double	instantVelocity			= data_.InstantVelocity() * MPS_TO_KPH;				// km/h
 			String	instantVelocityValue	= FormatDouble( VELOCITY_FORMAT, instantVelocity );
-			Double	averageVelocity			= data_.AverageVelocity();
+			Double	averageVelocity			= data_.AverageVelocity() * MPS_TO_KPH;				// km/h
 			String	averageVelocityValue	= FormatDouble( VELOCITY_FORMAT, averageVelocity );
 			
 			m_txtLongitude.setText( longitudeValue );
@@ -192,16 +195,24 @@ public class MainActivity extends Activity implements ListenerItf
 			
 		}
 		
+		Log.i( TAG, "ProcessData::exit" );
+		
 	}
 	
 	public void Notify( NotifyPropertiesItf data_ )
 	{
+		Log.i( TAG, "Notify::entry" );
+		
 		ProcessData( data_ );
+		
+		Log.i( TAG, "Notify::exit" );
 		
 	}
 	
 	private String FormatDouble( String pattern_, Double value_ )
 	{
+		Log.i( TAG, "FormatDouble::entry" );
+		
 		String			result	= null;
 		
 		if( null != value_ )
@@ -212,12 +223,16 @@ public class MainActivity extends Activity implements ListenerItf
 			
 		}
 		
+		Log.i( TAG, "FormatDouble::exit" );
+		
 		return result;
 		
 	}
 
 	private String FormatDate( String pattern_, Date value_ )
 	{
+		Log.i( TAG, "FormatDate::entry" );
+		
 		String			result	= null;
 		
 		if( null != value_ )
@@ -227,6 +242,8 @@ public class MainActivity extends Activity implements ListenerItf
 			result	= format.format( value_ );
 			
 		}
+		
+		Log.i( TAG, "FormatDate::exit" );
 		
 		return result;
 		
