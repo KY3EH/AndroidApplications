@@ -14,7 +14,6 @@ import com.alma.android.triptracker.itf.NotifyPropertiesItf;
 import com.alma.android.triptracker.service.TrackerService;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -75,7 +74,11 @@ public class MainActivity extends Activity implements ListenerItf
 											{
 												public void onClick( View v )
 												{
+													Log.i( TAG, "OnClickListener::onClick::entry" );
+													
 													Reset();
+													
+													Log.i( TAG, "OnClickListener::onClick::exit" );
 													
 												}
 												
@@ -91,6 +94,8 @@ public class MainActivity extends Activity implements ListenerItf
 	
 	private void ResetText()
 	{
+		Log.i( TAG, "ResetText::entry" );
+
 		m_txtLongitude.setText( "Not available" );
 		m_txtLatitude.setText( "Not available" );
 		m_txtAltitude.setText( "Not available" );
@@ -101,11 +106,15 @@ public class MainActivity extends Activity implements ListenerItf
 		m_txtCurrentTime.setText( "Not available" );
 		m_txtStartTime.setText( "Not available" );
 		
+		Log.i( TAG, "ResetText::exit" );
+		
 	}
 	
 	@Override
 	protected void onResume()
 	{
+		Log.i( TAG, "onResume::entry" );
+		
 		super.onResume();
 		TrackerService	service		= TrackerService.GetInctance();
 		boolean			isRunning	= (null != service);
@@ -122,11 +131,15 @@ public class MainActivity extends Activity implements ListenerItf
 		
 		m_serviceSwitch.setChecked( isRunning );
 		
+		Log.i( TAG, "onResume::exit" );
+		
 	}
 	
 	@Override
 	protected void onPause()
 	{
+		Log.i( TAG, "onPause::entry" );
+		
 		super.onPause();
 		TrackerService	service		= TrackerService.GetInctance();
 
@@ -136,10 +149,10 @@ public class MainActivity extends Activity implements ListenerItf
 			
 		}
 		
+		Log.i( TAG, "onPause::exit" );
+		
 	}
 	
-//		Log.i( TAG, "::entry" );
-//		Log.i( TAG, "::exit" );
 	private void Reset()
 	{
 		Log.i( TAG, "onProviderDisabled::Reset" );

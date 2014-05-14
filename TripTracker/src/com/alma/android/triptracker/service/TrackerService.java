@@ -40,6 +40,10 @@ public class TrackerService extends Service implements LocationListener, Tracker
 	
 	public static TrackerService GetInctance()
 	{
+		Log.i( TAG, "GetInctance::entry" );
+		
+		Log.i( TAG, "GetInctance::exit" );
+		
 		return s_instance;
 		
 	}
