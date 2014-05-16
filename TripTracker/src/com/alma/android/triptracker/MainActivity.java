@@ -350,20 +350,18 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 				DecimalFormat	format		= new DecimalFormat( SIGNAL_NOISE_FORMAT );
 				String			value		= format.format( signalNoise );
 				
-				m_satelliteNumber[ number ].setText( value );
-
-				number += 1;
-
-				if( number < MAXIMUM_SATELLITES )
+				if( number < MAXIMUM_SATELLITES - 1 )
 				{
-					continue;
+					m_satelliteNumber[ number ].setText( value );
+
+					number += 1;
 
 				}
 				
-				break;
-				
 			}
 
+			m_satelliteNumber[ MAXIMUM_SATELLITES - 1 ].setText( number );
+			
 		}
 		
 		Log.i( TAG, "onGpsStatusChanged::exit" );

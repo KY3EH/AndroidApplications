@@ -112,7 +112,7 @@ public class TrackerService extends Service implements LocationListener, Tracker
 		
 		if( true == isEnabled )
 		{
-			m_gpsService.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0L, 0.1f, this );
+			m_gpsService.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0L, 0f, this );
 			
 			s_instance	= this;
 			
