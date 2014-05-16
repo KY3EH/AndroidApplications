@@ -354,11 +354,13 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 
 				number += 1;
 
-				if( number > MAXIMUM_SATELLITES )
+				if( number < MAXIMUM_SATELLITES )
 				{
-					break;
+					continue;
 
 				}
+				
+				break;
 				
 			}
 
