@@ -155,12 +155,8 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		
 	}
 	
-	@Override
-	protected void onPause()
+	private void StopStatusListener()
 	{
-		Log.i( TAG, "onPause::entry" );
-		
-		super.onPause();
 		TrackerService	service		= TrackerService.GetInctance();
 
 		if( null != service )
@@ -171,6 +167,18 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			service.RemoveListener( this );
 			
 		}
+		
+		
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		Log.i( TAG, "onPause::entry" );
+		
+		StopStatusListener();
+		
+		super.onPause();
 		
 		Log.i( TAG, "onPause::exit" );
 		
@@ -295,6 +303,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		
 		if( true == isRunning )
 		{
+			StopStatusListener();
 			TrackerService.StopService( ctx );
 			m_serviceSwitch.setChecked( false );
 			ResetText();
@@ -332,10 +341,10 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		if(null != gpsStatus )
 		{
 			Iterable<GpsSatellite>	satellites	= gpsStatus.getSatellites();
+			int						number		= 0;
 
 			for( GpsSatellite satellite : satellites )
 			{
-				int	number	= 0;
 
 				float			signalNoise	= satellite.getSnr();
 				DecimalFormat	format		= new DecimalFormat( SIGNAL_NOISE_FORMAT );
