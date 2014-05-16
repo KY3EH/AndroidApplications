@@ -24,7 +24,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 {
 	private static final int	MAXIMUM_SATELLITES	= 10;
 	private static final String	TAG					= "MainActivity";
-	private static final String	SIGNAL_NOISE_FORMAT	= "00.0";
+	private static final String	SIGNAL_NOISE_FORMAT	= ".000";
 	private static final String	COORDINATE_FORMAT	= "#0.0000000";
 	private static final String	VELOCITY_FORMAT		= "#0.00";
 	private static final String	ALTITUDE_FORMAT		= "#0.0";
