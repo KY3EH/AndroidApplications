@@ -3,6 +3,9 @@ package com.alma.android.triptracker;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,16 +20,23 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends Activity implements ListenerItf
+public class MainActivity extends Activity implements ListenerItf, GpsStatus.Listener
 {
-	private static final String TAG					= "MainActivity";
-	private static final String COORDINATE_FORMAT	= "#0.0000000";
-	private static final String VELOCITY_FORMAT		= "#0.00";
-	private static final String ALTITUDE_FORMAT		= "#0.0";
-	private static final String DISTANCE_FORMAT		= "#0.0000";
-	private static final String DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
-	private static final double KILO				= 1000.0d;
-	private static final double MPS_TO_KPH			= ( 60 * 60 ) / KILO;
+	private static final int	MAXIMUM_SATILLITES	= 10;
+	private static final String	TAG					= "MainActivity";
+	private static final String	SIGNAL_NOISE_FORMAT	= "00.0";
+	private static final String	COORDINATE_FORMAT	= "#0.0000000";
+	private static final String	VELOCITY_FORMAT		= "#0.00";
+	private static final String	ALTITUDE_FORMAT		= "#0.0";
+	private static final String	DISTANCE_FORMAT		= "#0.0000";
+	private static final String	DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
+	private static final double	KILO				= 1000.0d;
+	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
+	private static final int[]	SATILLITE_NUMBER_ID	= { R.id.txt_satillite001, R.id.txt_satillite002,
+														R.id.txt_satillite003, R.id.txt_satillite004,
+														R.id.txt_satillite005, R.id.txt_satillite006,
+														R.id.txt_satillite007, R.id.txt_satillite008,
+														R.id.txt_satillite009, R.id.txt_satillite010 };
 	
     /** Called when the activity is first created. */
     @Override
@@ -69,6 +79,12 @@ public class MainActivity extends Activity implements ListenerItf
 		m_txtCurrentTime	= (TextView)findViewById( R.id.curretTime );
 		m_txtStartTime		= (TextView)findViewById( R.id.startTime );
 		m_btReset			= (Button)findViewById( R.id.reset );
+		
+		for( int i = 0 ; i < MAXIMUM_SATILLITES ; ++i )
+		{
+			m_satilliteNumber[ i ]	= (TextView)findViewById( SATILLITE_NUMBER_ID[ i ] );
+			
+		}
 
 		m_btReset.setOnClickListener( new View.OnClickListener()
 											{
@@ -127,6 +143,10 @@ public class MainActivity extends Activity implements ListenerItf
 			
 			ProcessData( data );
 			
+			LocationManager	locationManager = service.GetLocationManager();
+			
+			locationManager.addGpsStatusListener( this );
+			
 		}
 		
 		m_serviceSwitch.setChecked( isRunning );
@@ -145,6 +165,9 @@ public class MainActivity extends Activity implements ListenerItf
 
 		if( null != service )
 		{
+			LocationManager	locationManager = service.GetLocationManager();
+			
+			locationManager.removeGpsStatusListener( this );
 			service.RemoveListener( this );
 			
 		}
@@ -298,6 +321,43 @@ public class MainActivity extends Activity implements ListenerItf
 		}
 
 	}
+	public void onGpsStatusChanged( int event_ )
+	{
+		Log.i( TAG, "onGpsStatusChanged::entry" );
+		
+		TrackerService	service			= TrackerService.GetInctance();
+		LocationManager	locationManager = service.GetLocationManager();
+		GpsStatus		gpsStatus		= locationManager.getGpsStatus( null );		
+
+		if(null != gpsStatus )
+		{
+			Iterable<GpsSatellite>	satellites	= gpsStatus.getSatellites();
+
+			for( GpsSatellite satellite : satellites )
+			{
+				int	number	= 0;
+
+				float			signalNoise	= satellite.getSnr();
+				DecimalFormat	format		= new DecimalFormat( SIGNAL_NOISE_FORMAT );
+				String			value		= format.format( signalNoise );
+				
+				m_satilliteNumber[ number ].setText( value );
+
+				number += 1;
+
+				if( number > MAXIMUM_SATILLITES )
+				{
+					break;
+
+				}
+				
+			}
+
+		}
+		
+		Log.i( TAG, "onGpsStatusChanged::exit" );
+		
+	}
 	
 	private Switch				m_serviceSwitch;
 	private TextView			m_txtLongitude;
@@ -310,5 +370,7 @@ public class MainActivity extends Activity implements ListenerItf
 	private TextView			m_txtStartTime;
 	private TextView			m_txtAverageVelocity;
 	private Button				m_btReset;
+	private TextView[]			m_satilliteNumber		= new TextView[ MAXIMUM_SATILLITES ];
+	
 	
 }

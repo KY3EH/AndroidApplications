@@ -81,6 +81,16 @@ public class TrackerService extends Service implements LocationListener, Tracker
 		RemoveNotification( context_ );
 		
 	}
+	
+	public LocationManager GetLocationManager()
+	{
+		Log.i( TAG, "GetLocationManager::entry" );
+		
+		Log.i( TAG, "GetLocationManager::exit" );
+		
+		return m_gpsService;
+		
+	}
 
 	@Override
 	public void onCreate()
@@ -96,12 +106,13 @@ public class TrackerService extends Service implements LocationListener, Tracker
 	{
 		Log.i( TAG, "onStartCommand" );
 
-		LocationManager	gpsService		= (LocationManager)getSystemService( LOCATION_SERVICE );
-		boolean			isEnabled		= gpsService.isProviderEnabled( LocationManager.GPS_PROVIDER );
+		m_gpsService	= (LocationManager)getSystemService( LOCATION_SERVICE );
+		
+		boolean	isEnabled	= m_gpsService.isProviderEnabled( LocationManager.GPS_PROVIDER );
 		
 		if( true == isEnabled )
 		{
-			gpsService.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0L, 0.1f, this );
+			m_gpsService.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0L, 0.1f, this );
 			
 			s_instance	= this;
 			
@@ -468,11 +479,12 @@ public class TrackerService extends Service implements LocationListener, Tracker
 	
 	private NotifyPropertiesImpl	m_lastProperties;
 	
-	private Date			m_startTime			= null;
-	private Long			m_elapsedStartTime	= null;
-	private Double			m_longitude			= Double.NaN;
-	private Double			m_latitude			= Double.NaN;
-	private double			m_distance			= 0.0;
-	private final List<ListenerItf>	m_listeners	= Collections.synchronizedList( new ArrayList<ListenerItf>() );
+	private Date					m_startTime			= null;
+	private Long					m_elapsedStartTime	= null;
+	private Double					m_longitude			= Double.NaN;
+	private Double					m_latitude			= Double.NaN;
+	private double					m_distance			= 0.0;
+	private LocationManager			m_gpsService		= null;
+	private final List<ListenerItf>	m_listeners			= Collections.synchronizedList( new ArrayList<ListenerItf>() );
 	
 }
