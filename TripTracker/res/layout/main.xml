@@ -203,7 +203,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite001"
+					android:id="@+id/txt_satellite001"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -227,7 +227,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite002"
+					android:id="@+id/txt_satellite002"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -251,7 +251,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite003"
+					android:id="@+id/txt_satellite003"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -275,7 +275,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite004"
+					android:id="@+id/txt_satellite004"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -299,7 +299,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite005"
+					android:id="@+id/txt_satellite005"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -323,7 +323,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite006"
+					android:id="@+id/txt_satellite006"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -347,7 +347,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite007"
+					android:id="@+id/txt_satellite007"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -371,7 +371,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite008"
+					android:id="@+id/txt_satellite008"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -395,7 +395,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite009"
+					android:id="@+id/txt_satellite009"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
@@ -419,7 +419,7 @@
 					android:src="@drawable/ic_level000"
 					/>
 				<TextView
-					android:id="@+id/txt_satillite010"
+					android:id="@+id/txt_satellite010"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"

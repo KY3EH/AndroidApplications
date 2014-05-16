@@ -22,7 +22,7 @@ import java.util.Date;
 
 public class MainActivity extends Activity implements ListenerItf, GpsStatus.Listener
 {
-	private static final int	MAXIMUM_SATILLITES	= 10;
+	private static final int	MAXIMUM_SATELLITES	= 10;
 	private static final String	TAG					= "MainActivity";
 	private static final String	SIGNAL_NOISE_FORMAT	= "00.0";
 	private static final String	COORDINATE_FORMAT	= "#0.0000000";
@@ -32,11 +32,11 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private static final String	DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
 	private static final double	KILO				= 1000.0d;
 	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
-	private static final int[]	SATILLITE_NUMBER_ID	= { R.id.txt_satillite001, R.id.txt_satillite002,
-														R.id.txt_satillite003, R.id.txt_satillite004,
-														R.id.txt_satillite005, R.id.txt_satillite006,
-														R.id.txt_satillite007, R.id.txt_satillite008,
-														R.id.txt_satillite009, R.id.txt_satillite010 };
+	private static final int[]	SATELLITE_NUMBER_ID	= { R.id.txt_satellite001, R.id.txt_satellite002,
+														R.id.txt_satellite003, R.id.txt_satellite004,
+														R.id.txt_satellite005, R.id.txt_satellite006,
+														R.id.txt_satellite007, R.id.txt_satellite008,
+														R.id.txt_satellite009, R.id.txt_satellite010 };
 	
     /** Called when the activity is first created. */
     @Override
@@ -80,9 +80,9 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		m_txtStartTime		= (TextView)findViewById( R.id.startTime );
 		m_btReset			= (Button)findViewById( R.id.reset );
 		
-		for( int i = 0 ; i < MAXIMUM_SATILLITES ; ++i )
+		for( int i = 0 ; i < MAXIMUM_SATELLITES ; ++i )
 		{
-			m_satilliteNumber[ i ]	= (TextView)findViewById( SATILLITE_NUMBER_ID[ i ] );
+			m_satelliteNumber[ i ]	= (TextView)findViewById( SATELLITE_NUMBER_ID[ i ] );
 			
 		}
 
@@ -341,11 +341,11 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 				DecimalFormat	format		= new DecimalFormat( SIGNAL_NOISE_FORMAT );
 				String			value		= format.format( signalNoise );
 				
-				m_satilliteNumber[ number ].setText( value );
+				m_satelliteNumber[ number ].setText( value );
 
 				number += 1;
 
-				if( number > MAXIMUM_SATILLITES )
+				if( number > MAXIMUM_SATELLITES )
 				{
 					break;
 
@@ -370,7 +370,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private TextView			m_txtStartTime;
 	private TextView			m_txtAverageVelocity;
 	private Button				m_btReset;
-	private TextView[]			m_satilliteNumber		= new TextView[ MAXIMUM_SATILLITES ];
+	private TextView[]			m_satelliteNumber		= new TextView[ MAXIMUM_SATELLITES ];
 	
 	
 }
