@@ -35,7 +35,7 @@ public abstract class GpsTools
 	
 	public static int GetLevel( float signalNoise_, int maximum_ )
 	{
-		int	result	= ((int)signalNoise_) + 1 / 10;
+		int	result	= Math.round( signalNoise_ + 0.5f ) / 10;
 		
 		if( maximum_ > result )
 		{
