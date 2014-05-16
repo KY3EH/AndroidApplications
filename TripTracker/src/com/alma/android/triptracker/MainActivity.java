@@ -354,9 +354,9 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 				{
 					m_satelliteNumber[ number ].setText( value );
 
-					number += 1;
-
 				}
+				
+				number += 1;
 				
 			}
 
