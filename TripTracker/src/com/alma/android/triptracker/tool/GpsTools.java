@@ -33,6 +33,19 @@ public abstract class GpsTools
 		
 	}
 	
+	public static int GetLevel( float signalNoise_, int maximum_ )
+	{
+		int	result	= ((int)signalNoise_) + 1 / 10;
+		
+		if( maximum_ > result )
+		{
+			result	= maximum_;
+		}
+				
+		return result;
+		
+	}
+	
  	private GpsTools()
 	{
 		
