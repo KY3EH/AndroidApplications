@@ -360,7 +360,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 				
 			}
 
-			m_satelliteNumber[ MAXIMUM_SATELLITES - 1 ].setText( number );
+			m_satelliteNumber[ MAXIMUM_SATELLITES - 1 ].setText( Integer.toString( number ) );
 			
 		}
 		
@@ -379,7 +379,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private TextView			m_txtStartTime;
 	private TextView			m_txtAverageVelocity;
 	private Button				m_btReset;
-	private TextView[]			m_satelliteNumber		= new TextView[ MAXIMUM_SATELLITES ];
+	final private TextView[]	m_satelliteNumber		= new TextView[ MAXIMUM_SATELLITES ];
 	
 	
 }
