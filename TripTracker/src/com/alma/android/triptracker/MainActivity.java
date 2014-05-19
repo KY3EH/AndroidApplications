@@ -35,6 +35,17 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private static final String	DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
 	private static final double	KILO				= 1000.0d;
 	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
+	private static final int[]	SATELLITE_NUMBER_ID	= { R.id.txt_satellite001, R.id.txt_satellite002,
+														R.id.txt_satellite003, R.id.txt_satellite004,
+														R.id.txt_satellite005, R.id.txt_satellite006,
+														R.id.txt_satellite007, R.id.txt_satellite008,
+														R.id.txt_satellite009, R.id.txt_satellite010,
+														R.id.txt_satellite011, R.id.txt_satellite012,
+														R.id.txt_satellite013, R.id.txt_satellite014,
+														R.id.txt_satellite015, R.id.txt_satellite016,
+														R.id.txt_satellite017, R.id.txt_satellite018,
+														R.id.txt_satellite019, R.id.txt_satellite020 };
+
 	private static final int[]	IMAGE_ID			= { R.drawable.ic_level000,
 														R.drawable.ic_level001, R.drawable.ic_level002,
 														R.drawable.ic_level003, R.drawable.ic_level004,
@@ -99,6 +110,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		for( int i = 0 ; i < MAXIMUM_SATELLITES ; ++i )
 		{
 			m_satelliteLevel[ i ]	= (ImageView)findViewById( IMAGE_VIEW_ID[ i ] );
+			m_satelliteId[ i ]		= (TextView)findViewById( SATELLITE_NUMBER_ID[ i ] );
 			
 		}
 
@@ -364,6 +376,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			{
 
 				float		signalNoise	= satellite.getSnr();
+				int			satelliteId	= satellite.getPrn();
 				int			level		= GpsTools.GetLevel( signalNoise, MAXIMUM_LEVEL );
 				int			imageId		= IMAGE_ID[ level ];
 				Resources	resources	= getResources();
@@ -372,6 +385,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 				if( number < MAXIMUM_SATELLITES - 1 )
 				{
 					m_satelliteLevel[ number ].setImageBitmap( levelIcon );
+					m_satelliteId[ number ].setText( Integer.toString( satelliteId ) );
 
 				}
 				
@@ -397,5 +411,6 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private TextView			m_txtAverageVelocity;
 	private Button				m_btReset;
 	final private ImageView[]	m_satelliteLevel		= new ImageView[ MAXIMUM_SATELLITES ];
+	final private TextView[]	m_satelliteId			= new TextView[ MAXIMUM_SATELLITES ];
 	
 }
