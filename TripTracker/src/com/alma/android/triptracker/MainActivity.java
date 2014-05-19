@@ -160,6 +160,8 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		Log.i( TAG, "onResume::entry" );
 		
 		super.onResume();
+		ClearSatelliteInfo();
+		
 		TrackerService	service		= TrackerService.GetInctance();
 		boolean			isRunning	= (null != service);
 
@@ -332,6 +334,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		if( true == isRunning )
 		{
 			StopStatusListener();
+			ClearSatelliteInfo();
 			TrackerService.StopService( ctx );
 			m_serviceSwitch.setChecked( false );
 			ResetText();
@@ -359,6 +362,21 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 
 	}
 	
+	private void ClearSatelliteInfo()
+	{
+		int			imageId		= IMAGE_ID[ 0 ];
+		Resources	resources	= getResources();
+		Bitmap		levelIcon	= BitmapFactory.decodeResource( resources, imageId );
+		
+		for( int i = 0 ; i < MAXIMUM_SATELLITES ; ++i )
+		{
+			m_satelliteLevel[ i ].setImageBitmap( levelIcon );
+			m_satelliteId[ i ].setText( "" );
+
+		}
+		
+	}
+	
 	public void onGpsStatusChanged( int event_ )
 	{
 		Log.i( TAG, "onGpsStatusChanged::entry" );
@@ -382,7 +400,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 				Resources	resources	= getResources();
 				Bitmap		levelIcon	= BitmapFactory.decodeResource( resources, imageId );
 				
-				if( number < MAXIMUM_SATELLITES - 1 )
+				if( number < MAXIMUM_SATELLITES )
 				{
 					m_satelliteLevel[ number ].setImageBitmap( levelIcon );
 					m_satelliteId[ number ].setText( Integer.toString( satelliteId ) );
