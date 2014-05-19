@@ -7,8 +7,8 @@ package com.alma.android.triptracker.tool;
 public abstract class GpsTools
 {
 	private static final double	EARTH_RADIUS	= 6367.0d * 1000d;	// Earth radius in meters
-	private static final double	LINAR			= 100.0;
-	private static final double	LOG_BASIS		= Math.pow( (99.0 + LINAR)/LINAR, 1.0/10.0 ); //Root 
+	private static final double	LINEAR			= 20.0;
+	private static final double	LOG_BASIS		= Math.pow( (99.0 + LINEAR)/LINEAR, 1.0/10.0 ); //Root 
 
 	/**
 	 *
@@ -37,7 +37,7 @@ public abstract class GpsTools
 	
 	public static int GetLevel( float signalNoise_, int maximum_ )
 	{
-		long	result	= Math.round( Math.log( ( ( signalNoise_ + LINAR ) / LINAR ) ) / Math.log( LOG_BASIS ) );
+		long	result	= Math.round( Math.log( ( ( signalNoise_ + LINEAR ) / LINEAR ) ) / Math.log( LOG_BASIS ) );
 		
 		if( maximum_ < result )
 		{
