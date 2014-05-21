@@ -33,6 +33,8 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private static final String	ALTITUDE_FORMAT		= "#0.0";
 	private static final String	DISTANCE_FORMAT		= "#0.0000";
 	private static final String	DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
+	private static final String	ELEVATION_FORMAT	= "00";
+	private static final String	AZIMUTH_FORMAT		= "000";
 	private static final double	KILO				= 1000.0d;
 	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
 	private static final int[]	SATELLITE_NUMBER_ID	= { R.id.txt_satellite001, R.id.txt_satellite002,
@@ -44,7 +46,9 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 														R.id.txt_satellite013, R.id.txt_satellite014,
 														R.id.txt_satellite015, R.id.txt_satellite016,
 														R.id.txt_satellite017, R.id.txt_satellite018,
-														R.id.txt_satellite019, R.id.txt_satellite020 };
+														R.id.txt_satellite019, R.id.txt_satellite020,
+														R.id.txt_satellite021, R.id.txt_satellite022,
+														R.id.txt_satellite023, R.id.txt_satellite024 };
 
 	private static final int[]	IMAGE_ID			= { R.drawable.ic_level000,
 														R.drawable.ic_level001, R.drawable.ic_level002,
@@ -62,7 +66,9 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 														R.id.ic_level013, R.id.ic_level014,
 														R.id.ic_level015, R.id.ic_level016,
 														R.id.ic_level017, R.id.ic_level018,
-														R.id.ic_level019, R.id.ic_level020 };
+														R.id.ic_level019, R.id.ic_level020,
+														R.id.ic_level021, R.id.ic_level022,
+														R.id.ic_level023, R.id.ic_level024 };
 	private static final int	MAXIMUM_SATELLITES	= IMAGE_VIEW_ID.length;
 	
     /** Called when the activity is first created. */
@@ -393,17 +399,25 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			for( GpsSatellite satellite : satellites )
 			{
 
-				float		signalNoise	= satellite.getSnr();
-				int			satelliteId	= satellite.getPrn();
-				int			level		= GpsTools.GetLevel( signalNoise, MAXIMUM_LEVEL );
-				int			imageId		= IMAGE_ID[ level ];
-				Resources	resources	= getResources();
-				Bitmap		levelIcon	= BitmapFactory.decodeResource( resources, imageId );
 				
 				if( number < MAXIMUM_SATELLITES )
 				{
+					float			signalNoise	= satellite.getSnr();
+					int				satelliteId	= satellite.getPrn();
+					float			azimuth		= satellite.getAzimuth();
+					String			azimuthStr	= FormatDouble( AZIMUTH_FORMAT, Double.valueOf( azimuth ) );
+					float			elevation	= satellite.getElevation();
+					String			elevationStr= FormatDouble( ELEVATION_FORMAT, Double.valueOf( elevation ) );
+					boolean			isUsed		= satellite.usedInFix();
+					String			isUsedStr	= isUsed ? "T" : "F";
+					int				level		= GpsTools.GetLevel( signalNoise, MAXIMUM_LEVEL );
+					int				imageId		= IMAGE_ID[ level ];
+					Resources		resources	= getResources();
+					Bitmap			levelIcon	= BitmapFactory.decodeResource( resources, imageId );
+					String			text		= (new StringBuilder()).append( Integer.toString( satelliteId ) ).append( "\n" ).append( azimuthStr ).append( "\n" ).append( elevationStr ).append( "\n" ).append( isUsedStr ).toString();;
+					
 					m_satelliteLevel[ number ].setImageBitmap( levelIcon );
-					m_satelliteId[ number ].setText( Integer.toString( satelliteId ) );
+					m_satelliteId[ number ].setText( text );
 
 				}
 				
