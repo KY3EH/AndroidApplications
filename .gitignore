@@ -8,4 +8,9 @@
 /TripTracker/private/
 /TripTracker/nbandroid/
 
+/AndroidTest/gen/
+/AndroidTest/bin/
+/AndroidTest/private/
+/AndroidTest/nbandroid/
+
 

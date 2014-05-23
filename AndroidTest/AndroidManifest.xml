@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.alma.android.test.activity"
       android:versionCode="1"
-      android:versionName="0.0.1">
+      android:versionName="0.0.2">
 	
 	<uses-sdk
 		android:targetSdkVersion="19"

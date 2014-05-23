@@ -18,7 +18,7 @@ import org.alma.android.test.activity.R;
 public class SatellitesIndicator extends LinearLayout
 {
 	private static final String	TAG					= "SatellitesIndicator";
-	private static final String	DEFAULT_TEXT		= "NaN";
+	private static final String	DEFAULT_TEXT		= "";
 	private static final int	PADDING				= 3;
 	private static final int[]	IMAGE_ID			= { R.drawable.ic_level000,
 														R.drawable.ic_level001, R.drawable.ic_level002,
@@ -27,24 +27,11 @@ public class SatellitesIndicator extends LinearLayout
 														R.drawable.ic_level007, R.drawable.ic_level008,
 														R.drawable.ic_level009, R.drawable.ic_level010,};
 	
-	private static final LayoutParams	TV_LAYOUT_PARAMS;
-	private static final LayoutParams	WRAP_LAYOUT_PARAMS;
+	private static final LayoutParams	TV_LAYOUT_PARAMS	= new LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT );;
+	private static final LayoutParams	WRAP_LAYOUT_PARAMS	= new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT );;
 
-	private static Bitmap[]		s_levelBitmaps;
+	private static Bitmap[]		s_levelBitmaps	= null;
 
-	static
-	{
-		TV_LAYOUT_PARAMS	= new LayoutParams( null );
-		WRAP_LAYOUT_PARAMS	= new LayoutParams( null );
-		
-		TV_LAYOUT_PARAMS.width	= LayoutParams.MATCH_PARENT;
-		TV_LAYOUT_PARAMS.height	= LayoutParams.WRAP_CONTENT;
-		
-		WRAP_LAYOUT_PARAMS.width	= LayoutParams.WRAP_CONTENT;
-		WRAP_LAYOUT_PARAMS.height	= LayoutParams.WRAP_CONTENT;
-		
-	}
-	
 	public void SatelliteId( String id_ )
 	{
 		Log.i( TAG, "SatelliteId::entry" );
@@ -132,6 +119,8 @@ public class SatellitesIndicator extends LinearLayout
 		m_layout.setOrientation( VERTICAL );
 		m_layout.setLayoutParams( WRAP_LAYOUT_PARAMS );
 		
+		this.addView( m_layout );
+		
 		Log.i( TAG, "InitializeLayout::exit" );
 		
 	}
@@ -153,8 +142,8 @@ public class SatellitesIndicator extends LinearLayout
 	{
 		Log.i( TAG, "Initialize::entry" );
 		
-		InitializeLayout();
 		LoadLevelBitmaps();
+		InitializeLayout();
 		InitializeBitmap();
 		
 		InitializeTextView( m_id );

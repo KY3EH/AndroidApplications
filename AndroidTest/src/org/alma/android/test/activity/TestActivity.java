@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.alma.android.test.view.SatellitesIndicator;
 import org.alma.android.test.view.TestView;
 
 public class TestActivity extends Activity
@@ -67,13 +68,8 @@ public class TestActivity extends Activity
 	{
 		Log.i( TAG, "Add::entry" );
 		
-		TestView	item	= new TestView( this );
-		int			id		= NEXT_ID.incrementAndGet();
-		String		text	= "TEST" + Integer.toString( id );
-		
-		item.SetId( text );
-		item.SetAzimuth( text );
-		item.SetElevation( text );
+		SatellitesIndicator	item	= new SatellitesIndicator( this );
+
 		m_ltAcceptor.addView( item );
 
 		Log.i( TAG, "Add::exit" );
