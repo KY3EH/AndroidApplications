@@ -14,16 +14,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import com.alma.android.triptracker.impl.SatelliteIndicator;
 import com.alma.android.triptracker.itf.ListenerItf;
 import com.alma.android.triptracker.itf.NotifyPropertiesItf;
 import com.alma.android.triptracker.service.TrackerService;
 import com.alma.android.triptracker.tool.GpsTools;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends Activity implements ListenerItf, GpsStatus.Listener
 {
@@ -37,39 +41,6 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private static final String	AZIMUTH_FORMAT		= "000";
 	private static final double	KILO				= 1000.0d;
 	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
-	private static final int[]	SATELLITE_NUMBER_ID	= { R.id.txt_satellite001, R.id.txt_satellite002,
-														R.id.txt_satellite003, R.id.txt_satellite004,
-														R.id.txt_satellite005, R.id.txt_satellite006,
-														R.id.txt_satellite007, R.id.txt_satellite008,
-														R.id.txt_satellite009, R.id.txt_satellite010,
-														R.id.txt_satellite011, R.id.txt_satellite012,
-														R.id.txt_satellite013, R.id.txt_satellite014,
-														R.id.txt_satellite015, R.id.txt_satellite016,
-														R.id.txt_satellite017, R.id.txt_satellite018,
-														R.id.txt_satellite019, R.id.txt_satellite020,
-														R.id.txt_satellite021, R.id.txt_satellite022,
-														R.id.txt_satellite023, R.id.txt_satellite024 };
-
-	private static final int[]	IMAGE_ID			= { R.drawable.ic_level000,
-														R.drawable.ic_level001, R.drawable.ic_level002,
-														R.drawable.ic_level003, R.drawable.ic_level004,
-														R.drawable.ic_level005, R.drawable.ic_level006,
-														R.drawable.ic_level007, R.drawable.ic_level008,
-														R.drawable.ic_level009, R.drawable.ic_level010,};
-	private static final int	MAXIMUM_LEVEL		= IMAGE_ID.length - 1;
-	private static final int[]	IMAGE_VIEW_ID		= { R.id.ic_level001, R.id.ic_level002,
-														R.id.ic_level003, R.id.ic_level004,
-														R.id.ic_level005, R.id.ic_level006,
-														R.id.ic_level007, R.id.ic_level008,
-														R.id.ic_level009, R.id.ic_level010,
-														R.id.ic_level011, R.id.ic_level012,
-														R.id.ic_level013, R.id.ic_level014,
-														R.id.ic_level015, R.id.ic_level016,
-														R.id.ic_level017, R.id.ic_level018,
-														R.id.ic_level019, R.id.ic_level020,
-														R.id.ic_level021, R.id.ic_level022,
-														R.id.ic_level023, R.id.ic_level024 };
-	private static final int	MAXIMUM_SATELLITES	= IMAGE_VIEW_ID.length;
 	
     /** Called when the activity is first created. */
     @Override
@@ -112,14 +83,8 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		m_txtCurrentTime	= (TextView)findViewById( R.id.curretTime );
 		m_txtStartTime		= (TextView)findViewById( R.id.startTime );
 		m_btReset			= (Button)findViewById( R.id.reset );
+		m_indicatorsLyaout	= (LinearLayout)findViewById( R.id.indicators_lyaout );
 		
-		for( int i = 0 ; i < MAXIMUM_SATELLITES ; ++i )
-		{
-			m_satelliteLevel[ i ]	= (ImageView)findViewById( IMAGE_VIEW_ID[ i ] );
-			m_satelliteId[ i ]		= (TextView)findViewById( SATELLITE_NUMBER_ID[ i ] );
-			
-		}
-
 		m_btReset.setOnClickListener( new View.OnClickListener()
 											{
 												public void onClick( View v )
@@ -245,23 +210,23 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		if( null != data_ )
 		{
 			Date	startTime				= data_.StartTime();
-			String	startTimeValue			= FormatDate( DATE_FORMAT, startTime );
+			String	startTimeValue			= GpsTools.FormatDate( DATE_FORMAT, startTime );
 			Date	eventTime				= data_.EventTime();
-			String	eventTimeValue			= FormatDate( DATE_FORMAT, eventTime );;
+			String	eventTimeValue			= GpsTools.FormatDate( DATE_FORMAT, eventTime );;
 			Double	longitude				= data_.Longitude();
-			String	longitudeValue			= FormatDouble( COORDINATE_FORMAT, longitude );
+			String	longitudeValue			= GpsTools.FormatDouble( COORDINATE_FORMAT, longitude );
 			Double	latitude				= data_.Latitude();
-			String	latitudeValue			= FormatDouble( COORDINATE_FORMAT, latitude );
+			String	latitudeValue			= GpsTools.FormatDouble( COORDINATE_FORMAT, latitude );
 			Double	altitude				= data_.Altitude();
-			String	altitudeValue			= FormatDouble( ALTITUDE_FORMAT, altitude );
+			String	altitudeValue			= GpsTools.FormatDouble( ALTITUDE_FORMAT, altitude );
 			Double	distance				= data_.Distance() / KILO;							// km
-			String	distanceValue			= FormatDouble( DISTANCE_FORMAT, distance );
+			String	distanceValue			= GpsTools.FormatDouble( DISTANCE_FORMAT, distance );
 			Double	deltaDistance			= data_.DeltaDistance() / KILO;						// km
-			String	deltaDistanceValue		= FormatDouble( DISTANCE_FORMAT, deltaDistance );
+			String	deltaDistanceValue		= GpsTools.FormatDouble( DISTANCE_FORMAT, deltaDistance );
 			Double	instantVelocity			= data_.InstantVelocity() * MPS_TO_KPH;				// km/h
-			String	instantVelocityValue	= FormatDouble( VELOCITY_FORMAT, instantVelocity );
+			String	instantVelocityValue	= GpsTools.FormatDouble( VELOCITY_FORMAT, instantVelocity );
 			Double	averageVelocity			= data_.AverageVelocity() * MPS_TO_KPH;				// km/h
-			String	averageVelocityValue	= FormatDouble( VELOCITY_FORMAT, averageVelocity );
+			String	averageVelocityValue	= GpsTools.FormatDouble( VELOCITY_FORMAT, averageVelocity );
 			
 			m_txtLongitude.setText( longitudeValue );
 			m_txtLatitude.setText( latitudeValue );
@@ -289,46 +254,6 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		
 	}
 	
-	private String FormatDouble( String pattern_, Double value_ )
-	{
-		Log.i( TAG, "FormatDouble::entry" );
-		
-		String			result	= null;
-		
-		if( null != value_ )
-		{
-			DecimalFormat	format	= new DecimalFormat( pattern_ );
-			
-			result	= format.format( value_ );
-			
-		}
-		
-		Log.i( TAG, "FormatDouble::exit" );
-		
-		return result;
-		
-	}
-
-	private String FormatDate( String pattern_, Date value_ )
-	{
-		Log.i( TAG, "FormatDate::entry" );
-		
-		String			result	= null;
-		
-		if( null != value_ )
-		{
-			SimpleDateFormat	format	= new SimpleDateFormat( pattern_ );
-			
-			result	= format.format( value_ );
-			
-		}
-		
-		Log.i( TAG, "FormatDate::exit" );
-		
-		return result;
-		
-	}
-
 	private synchronized void ProcessOnClick( View view_ ) throws IOException
 	{
 		Log.i( TAG, "ProcessOnClick" );
@@ -370,16 +295,71 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	
 	private void ClearSatelliteInfo()
 	{
-		int			imageId		= IMAGE_ID[ 0 ];
-		Resources	resources	= getResources();
-		Bitmap		levelIcon	= BitmapFactory.decodeResource( resources, imageId );
+		m_indicatorsLyaout.removeAllViews();
+		m_indicatorMap.clear();
+		m_satelliteMap.clear();
 		
-		for( int i = 0 ; i < MAXIMUM_SATELLITES ; ++i )
+	}
+	
+	private void CleareSatelliteMap()
+	{
+		Set<Integer>	satelliteIds	= m_satelliteMap.keySet();
+
+		for( Integer id : satelliteIds )
 		{
-			m_satelliteLevel[ i ].setImageBitmap( levelIcon );
-			m_satelliteId[ i ].setText( "" );
+			m_satelliteMap.put( id, Boolean.FALSE );
 
 		}
+			
+	}
+	
+	private void AddSatellite( GpsSatellite satellite_ )
+	{
+		Log.i( TAG, "AddSatellite::entry" );
+		
+		int					satelliteNumber	= satellite_.getPrn();
+		Integer				satelliteId		= Integer.valueOf( satelliteNumber );
+		SatelliteIndicator	indicator		= m_indicatorMap.get( satelliteId );
+		
+		if( null == indicator )
+		{
+			indicator	= new SatelliteIndicator( this, satellite_ );
+			
+			m_indicatorMap.put( satelliteId, indicator );
+			
+		}
+		else
+		{
+			indicator.Satellite( satellite_ );
+			
+		}
+
+		m_satelliteMap.put( satelliteId, Boolean.TRUE );
+		
+		Log.i( TAG, "AddSatellite::exit" );
+		
+	}
+	
+	private void RemoveSatellites()
+	{
+		Set<Integer>	satelliteIds	= m_satelliteMap.keySet();
+
+		for( Integer id : satelliteIds )
+		{
+			Boolean	isUpdated	= m_satelliteMap.get( id );
+			
+			if( false == isUpdated )
+			{
+				View	exparedView	= m_indicatorMap.get( id );
+				
+				m_indicatorsLyaout.removeView( exparedView );
+				m_satelliteMap.remove( id );
+				m_indicatorMap.remove( id );
+				
+			}
+
+		}
+			
 		
 	}
 	
@@ -391,39 +371,19 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		LocationManager	locationManager = service.GetLocationManager();
 		GpsStatus		gpsStatus		= locationManager.getGpsStatus( null );		
 
-		if(null != gpsStatus )
+		if( null != gpsStatus )
 		{
 			Iterable<GpsSatellite>	satellites	= gpsStatus.getSatellites();
-			int						number		= 0;
+			
+			CleareSatelliteMap();
 
 			for( GpsSatellite satellite : satellites )
 			{
-
-				
-				if( number < MAXIMUM_SATELLITES )
-				{
-					float			signalNoise	= satellite.getSnr();
-					int				satelliteId	= satellite.getPrn();
-					float			azimuth		= satellite.getAzimuth();
-					String			azimuthStr	= FormatDouble( AZIMUTH_FORMAT, Double.valueOf( azimuth ) );
-					float			elevation	= satellite.getElevation();
-					String			elevationStr= FormatDouble( ELEVATION_FORMAT, Double.valueOf( elevation ) );
-					boolean			isUsed		= satellite.usedInFix();
-					String			isUsedStr	= isUsed ? "T" : "F";
-					int				level		= GpsTools.GetLevel( signalNoise, MAXIMUM_LEVEL );
-					int				imageId		= IMAGE_ID[ level ];
-					Resources		resources	= getResources();
-					Bitmap			levelIcon	= BitmapFactory.decodeResource( resources, imageId );
-					String			text		= (new StringBuilder()).append( Integer.toString( satelliteId ) ).append( "\n" ).append( azimuthStr ).append( "\n" ).append( elevationStr ).append( "\n" ).append( isUsedStr ).toString();;
-					
-					m_satelliteLevel[ number ].setImageBitmap( levelIcon );
-					m_satelliteId[ number ].setText( text );
-
-				}
-				
-				number += 1;
+				AddSatellite( satellite );
 				
 			}
+			
+			RemoveSatellites();
 
 		}
 		
@@ -442,7 +402,9 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private TextView			m_txtStartTime;
 	private TextView			m_txtAverageVelocity;
 	private Button				m_btReset;
-	final private ImageView[]	m_satelliteLevel		= new ImageView[ MAXIMUM_SATELLITES ];
-	final private TextView[]	m_satelliteId			= new TextView[ MAXIMUM_SATELLITES ];
+	private LinearLayout		m_indicatorsLyaout;
+	
+	private final Map<Integer, Boolean>				m_satelliteMap	= Collections.synchronizedMap( new HashMap<Integer, Boolean>() );
+	private final Map<Integer, SatelliteIndicator>	m_indicatorMap	= Collections.synchronizedMap( new HashMap<Integer, SatelliteIndicator>() );
 	
 }
