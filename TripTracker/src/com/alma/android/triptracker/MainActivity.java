@@ -13,20 +13,19 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.alma.android.triptracker.impl.Remover;
 import com.alma.android.triptracker.impl.SatelliteIndicator;
 import com.alma.android.triptracker.itf.ListenerItf;
 import com.alma.android.triptracker.itf.NotifyPropertiesItf;
 import com.alma.android.triptracker.service.TrackerService;
 import com.alma.android.triptracker.tool.GpsTools;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity implements ListenerItf, GpsStatus.Listener
 {
@@ -36,18 +35,15 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private static final String	ALTITUDE_FORMAT		= "#0.0";
 	private static final String	DISTANCE_FORMAT		= "#0.0000";
 	private static final String	DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
-	private static final String	ELEVATION_FORMAT	= "00";
-	private static final String	AZIMUTH_FORMAT		= "000";
 	private static final double	KILO				= 1000.0d;
 	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
-	
-	private	static final ExecutorService	s_executor	= Executors.newSingleThreadExecutor();
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate( Bundle savedInstanceState_ )
     {
 		Log.i( TAG, "onCreate::entry" );
+		
         super.onCreate( savedInstanceState_ );
         setContentView( R.layout.main );
 
@@ -296,13 +292,14 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	
 	private void ClearSatelliteInfo()
 	{
+		
 		m_indicatorsLyaout.removeAllViews();
 		m_indicatorMap.clear();
 		m_satelliteMap.clear();
 		
 	}
 	
-	private void CleareSatelliteMap()
+	private synchronized void CleareSatelliteMap()
 	{
 		Set<Integer>	satelliteIds	= m_satelliteMap.keySet();
 
@@ -314,7 +311,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			
 	}
 	
-	private void AddSatellite( GpsSatellite satellite_ )
+	private synchronized void AddSatellite( GpsSatellite satellite_ )
 	{
 		Log.i( TAG, "AddSatellite::entry" );
 		
@@ -342,9 +339,10 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		
 	}
 	
-	private void RemoveSatellites()
+	private synchronized void RemoveSatellites()
 	{
 		Set<Integer>	satelliteIds	= m_satelliteMap.keySet();
+		List<Integer>	removeList		= new ArrayList<Integer>();
 
 		for( Integer id : satelliteIds )
 		{
@@ -353,17 +351,38 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			if( false == isUpdated )
 			{
 				View	exparedView	= m_indicatorMap.get( id );
-				Remover	remover		= new Remover( m_indicatorsLyaout, exparedView );
 				
-				m_satelliteMap.remove( id );
+				m_indicatorsLyaout.removeView( exparedView );
+				
+				removeList.add( id );
 				m_indicatorMap.remove( id );
-				
-				s_executor.execute( remover );
 				
 			}
 
 		}
+		
+		for( Integer id : removeList )
+		{
+			m_satelliteMap.remove( id );
+		
+		}
 			
+		
+	}
+	
+	private void ProcesSatelliteStatus( GpsStatus gpsStatus_ )
+	{
+		Iterable<GpsSatellite>	satellites	= gpsStatus_.getSatellites();
+
+		CleareSatelliteMap();
+
+		for( GpsSatellite satellite : satellites )
+		{
+			AddSatellite( satellite );
+
+		}
+
+		RemoveSatellites();
 		
 	}
 	
@@ -377,17 +396,29 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 
 		if( null != gpsStatus )
 		{
-			Iterable<GpsSatellite>	satellites	= gpsStatus.getSatellites();
-			
-			CleareSatelliteMap();
-
-			for( GpsSatellite satellite : satellites )
+			switch( event_ )
 			{
-				AddSatellite( satellite );
+			case GpsStatus.GPS_EVENT_STARTED:
+				Log.i( TAG, "GPS_EVENT_STARTED" );
 				
+				break;
+
+			case GpsStatus.GPS_EVENT_STOPPED:
+				Log.i( TAG, "GPS_EVENT_STOPPED" );
+				
+				break;
+
+			case GpsStatus.GPS_EVENT_FIRST_FIX:
+				Log.i( TAG, "GPS_EVENT_FIRST_FIX" );
+				
+				break;
+
+			case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+				ProcesSatelliteStatus( gpsStatus );
+				
+				break;
+
 			}
-			
-			RemoveSatellites();
 
 		}
 		
