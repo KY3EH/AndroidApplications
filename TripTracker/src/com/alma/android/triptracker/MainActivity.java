@@ -3,9 +3,6 @@ package com.alma.android.triptracker;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.LocationManager;
@@ -13,10 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import com.alma.android.triptracker.impl.Remover;
 import com.alma.android.triptracker.impl.SatelliteIndicator;
 import com.alma.android.triptracker.itf.ListenerItf;
 import com.alma.android.triptracker.itf.NotifyPropertiesItf;
@@ -28,6 +25,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity implements ListenerItf, GpsStatus.Listener
 {
@@ -41,6 +40,8 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 	private static final String	AZIMUTH_FORMAT		= "000";
 	private static final double	KILO				= 1000.0d;
 	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
+	
+	private	static final ExecutorService	s_executor	= Executors.newSingleThreadExecutor();
 	
     /** Called when the activity is first created. */
     @Override
@@ -325,7 +326,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		{
 			indicator	= new SatelliteIndicator( this, satellite_ );
 			
-			m_indicatorsLyaout.addView( indicator, satelliteNumber );
+			m_indicatorsLyaout.addView( indicator );
 			m_indicatorMap.put( satelliteId, indicator );
 			
 		}
@@ -351,11 +352,13 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			
 			if( false == isUpdated )
 			{
-				int	index	= id.intValue();
+				View	exparedView	= m_indicatorMap.get( id );
+				Remover	remover		= new Remover( m_indicatorsLyaout, exparedView );
 				
-				m_indicatorsLyaout.removeViewAt( index );
 				m_satelliteMap.remove( id );
 				m_indicatorMap.remove( id );
+				
+				s_executor.execute( remover );
 				
 			}
 
