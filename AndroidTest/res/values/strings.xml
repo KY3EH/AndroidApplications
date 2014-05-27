@@ -3,4 +3,5 @@
     <string name="app_name">TestActivity</string>
 	<string name="addButton">Add</string>
 	<string name="removeButton">Remove</string>
+	<string name="removeLastButton">Remove Last</string>
 </resources>

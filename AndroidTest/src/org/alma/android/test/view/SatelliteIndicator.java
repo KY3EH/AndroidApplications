@@ -15,7 +15,7 @@ import org.alma.android.test.activity.R;
  * May 22, 2014
  * @author Maxim Kuzovlev
  */
-public class SatellitesIndicator extends LinearLayout
+public class SatelliteIndicator extends LinearLayout
 {
 	private static final String	TAG					= "SatellitesIndicator";
 	private static final String	DEFAULT_TEXT		= "";
@@ -155,7 +155,7 @@ public class SatellitesIndicator extends LinearLayout
 
 	}
 	
-	public SatellitesIndicator( Context context_ )
+	public SatelliteIndicator( Context context_ )
 	{
 		super( context_ );
 		
