@@ -325,6 +325,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		{
 			indicator	= new SatelliteIndicator( this, satellite_ );
 			
+			m_indicatorsLyaout.addView( indicator );
 			m_indicatorMap.put( satelliteId, indicator );
 			
 		}
@@ -333,7 +334,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			indicator.Satellite( satellite_ );
 			
 		}
-
+		
 		m_satelliteMap.put( satelliteId, Boolean.TRUE );
 		
 		Log.i( TAG, "AddSatellite::exit" );
