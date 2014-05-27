@@ -325,7 +325,7 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 		{
 			indicator	= new SatelliteIndicator( this, satellite_ );
 			
-			m_indicatorsLyaout.addView( indicator );
+			m_indicatorsLyaout.addView( indicator, satelliteNumber );
 			m_indicatorMap.put( satelliteId, indicator );
 			
 		}
@@ -351,9 +351,9 @@ public class MainActivity extends Activity implements ListenerItf, GpsStatus.Lis
 			
 			if( false == isUpdated )
 			{
-				View	exparedView	= m_indicatorMap.get( id );
+				int	index	= id.intValue();
 				
-				m_indicatorsLyaout.removeView( exparedView );
+				m_indicatorsLyaout.removeViewAt( index );
 				m_satelliteMap.remove( id );
 				m_indicatorMap.remove( id );
 				
