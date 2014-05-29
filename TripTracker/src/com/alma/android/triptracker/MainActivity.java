@@ -30,12 +30,12 @@ import java.util.Set;
 public class MainActivity extends Activity implements ListenerItf, GpsStatus.Listener
 {
 	private static final String	TAG					= "MainActivity";
-	private static final String	COORDINATE_FORMAT	= "#0.0000000";
+	private static final String	COORDINATE_FORMAT	= "#0.0000";
 	private static final String	VELOCITY_FORMAT		= "#0.00";
 	private static final String	ALTITUDE_FORMAT		= "#0.0";
 	private static final String	DISTANCE_FORMAT		= "#0.0000";
-	private static final String	DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss.SSS ZZZZZ";
-	private static final double	KILO				= 1000.0d;
+	private static final String	DATE_FORMAT			= "yyyy-MM-dd HH:mm:ss ZZZZZ";
+	private static final double	KILO					= 1000.0d;
 	private static final double	MPS_TO_KPH			= ( 60 * 60 ) / KILO;
 	
     /** Called when the activity is first created. */
